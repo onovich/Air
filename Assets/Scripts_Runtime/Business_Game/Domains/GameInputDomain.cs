@@ -1,4 +1,4 @@
-namespace Leap {
+namespace Air {
 
     public static class GameInputDomain {
 
@@ -7,11 +7,10 @@ namespace Leap {
             inputEntity.ProcessInput(ctx.mainCamera, dt);
         }
 
-        public static void Owner_BakeInput(GameBusinessContext ctx, RoleEntity owner) {
+        public static void Owner_BakeInput(GameBusinessContext ctx, BoidEntity owner) {
             InputEntity inputEntity = ctx.inputEntity;
-            ref RoleInputComponent inputCom = ref owner.inputCom;
+            ref BoidInputComponent inputCom = ref owner.inputCom;
             inputCom.moveAxis = inputEntity.moveAxis;
-            inputCom.jumpAxis = inputEntity.jumpAxis;
         }
 
     }
