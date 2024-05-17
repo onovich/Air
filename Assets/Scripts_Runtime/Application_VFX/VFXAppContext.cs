@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using TenonKit.Prism;
 using UnityEngine;
 
-namespace Leap {
+namespace Air {
 
     public class VFXAppContext {
 

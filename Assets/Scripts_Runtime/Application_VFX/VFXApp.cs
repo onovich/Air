@@ -1,10 +1,10 @@
 using System;
 using System.Threading.Tasks;
-using Leap.UI;
+using Air.UI;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 
-namespace Leap {
+namespace Air {
     public static class VFXApp {
 
         public static void Init(VFXAppContext ctx) {

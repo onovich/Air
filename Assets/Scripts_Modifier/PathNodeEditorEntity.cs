@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Leap.Modifier {
+namespace Air.Modifier {
 
     public class PathNodeEditorEntity : MonoBehaviour {
 

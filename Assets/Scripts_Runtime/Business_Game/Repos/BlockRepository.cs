@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Leap {
+namespace Air {
 
     public class BlockRepository {
 

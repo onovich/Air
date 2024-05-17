@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEngine.ResourceManagement.AsyncOperations;
 using UnityEngine.Tilemaps;
 
-namespace Leap {
+namespace Air {
 
     public class AssetsInfraContext {
 
@@ -32,10 +32,10 @@ namespace Leap {
             return prefab;
         }
 
-        public GameObject Entity_GetRole() {
-            var has = Entity_TryGet("Entity_Role", out var prefab);
+        public GameObject Entity_GetBoid() {
+            var has = Entity_TryGet("Entity_Boid", out var prefab);
             if (!has) {
-                GLog.LogError($"Entity Role not found");
+                GLog.LogError($"Entity Boid not found");
             }
             return prefab;
         }

@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Runtime.CompilerServices;
 
-namespace Leap {
+namespace Air {
 
     public static class GLog {
 

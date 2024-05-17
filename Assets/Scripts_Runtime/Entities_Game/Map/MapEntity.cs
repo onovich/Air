@@ -3,30 +3,25 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
-namespace Leap {
+namespace Air {
 
     public class MapEntity : MonoBehaviour {
 
         public int typeID;
-        public Vector2Int mapSize;
-        public Vector2Int mapOffset;
+        public Vector3 mapSize;
+        public Vector3 mapOffset;
         public TileBase tileBase_terrain;
 
-        public Dictionary<Vector2Int, int> terrainTypeIDDict;
+        public Dictionary<Vector2, int> terrainTypeIDDict;
 
         [SerializeField] Tilemap tilemap_terrain;
         public Tilemap Tilemap_Terrain => tilemap_terrain;
 
         public void Ctor() {
-            terrainTypeIDDict = new Dictionary<Vector2Int, int>();
+            terrainTypeIDDict = new Dictionary<Vector2, int>();
         }
 
-        public void Terrain_Set(Vector2Int pos, TileBase tile, int typeID) {
-            tilemap_terrain.SetTile(pos.ToVector3Int(), tile);
-            terrainTypeIDDict[pos] = typeID;
-        }
-
-        public bool Terrain_GetTypeID(Vector2Int pos, out int typeID) {
+        public bool Terrain_GetTypeID(Vector2 pos, out int typeID) {
             if (terrainTypeIDDict.ContainsKey(pos)) {
                 typeID = terrainTypeIDDict[pos];
                 return true;

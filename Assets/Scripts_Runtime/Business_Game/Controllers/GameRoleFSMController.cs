@@ -1,89 +1,58 @@
 using UnityEngine;
 
-namespace Leap {
+namespace Air {
 
-    public static class GameRoleFSMController {
+    public static class GameBoidFSMController {
 
-        public static void FixedTickFSM(GameBusinessContext ctx, RoleEntity role, float fixdt) {
+        public static void FixedTickFSM(GameBusinessContext ctx, BoidEntity boid, float fixdt) {
 
-            FixedTickFSM_Any(ctx, role, fixdt);
+            FixedTickFSM_Any(ctx, boid, fixdt);
 
-            RoleFSMStatus status = role.FSM_GetStatus();
-            if (status == RoleFSMStatus.Normal) {
-                FixedTickFSM_Idle(ctx, role, fixdt);
-            } else if (status == RoleFSMStatus.WallJumping) {
-                FixedTickFSM_WallJumping(ctx, role, fixdt);
-            } else if (status == RoleFSMStatus.Dead) {
-                FixedTickFSM_Dead(ctx, role, fixdt);
+            BoidFSMStatus status = boid.FSM_GetStatus();
+            if (status == BoidFSMStatus.Normal) {
+                FixedTickFSM_Idle(ctx, boid, fixdt);
+            } else if (status == BoidFSMStatus.Dead) {
+                FixedTickFSM_Dead(ctx, boid, fixdt);
             } else {
-                GLog.LogError($"GameRoleFSMController.FixedTickFSM: unknown status: {status}");
+                GLog.LogError($"GameBoidFSMController.FixedTickFSM: unknown status: {status}");
             }
 
         }
 
-        static void FixedTickFSM_Any(GameBusinessContext ctx, RoleEntity role, float fixdt) {
+        static void FixedTickFSM_Any(GameBusinessContext ctx, BoidEntity boid, float fixdt) {
 
         }
 
-        static void FixedTickFSM_Idle(GameBusinessContext ctx, RoleEntity role, float fixdt) {
-            RoleFSMComponent fsm = role.FSM_GetComponent();
+        static void FixedTickFSM_Idle(GameBusinessContext ctx, BoidEntity boid, float fixdt) {
+            BoidFSMComponent fsm = boid.FSM_GetComponent();
             if (fsm.normal_isEntering) {
                 fsm.normal_isEntering = false;
             }
 
-            // Fall
-            GameRoleDomain.ApplyFalling(ctx, role, fixdt);
-
             // Move
-            GameRoleDomain.ApplyMove(ctx, role, fixdt);
-
-            // Jump
-            GameRoleDomain.ApplyJump(ctx, role, fixdt);
-
-            // Hold Wall
-            GameRoleDomain.ApplyHoldWall(ctx, role, fixdt);
-
-            // Wall Jump
-            GameRoleDomain.ApplyWallJump(ctx, role, fixdt);
+            GameBoidDomain.ApplyMove(ctx, boid, fixdt);
 
             // Constraint
-            GameRoleDomain.ApplyConstraint(ctx, role, fixdt);
+            GameBoidDomain.ApplyConstraint(ctx, boid, fixdt);
 
             // Dead
-            if (role.hp <= 0) {
+            if (boid.hp <= 0) {
                 fsm.EnterDead();
             }
         }
 
-        static void FixedTickFSM_WallJumping(GameBusinessContext ctx, RoleEntity role, float fixdt) {
-            RoleFSMComponent fsm = role.FSM_GetComponent();
-            if (fsm.dead_isEntering) {
-                fsm.dead_isEntering = false;
-            }
-
-            // Fall
-            GameRoleDomain.ApplyFalling(ctx, role, fixdt);
-
-            // Wall Jump
-            // GameRoleDomain.ApplyWallJump(ctx, role, fixdt);
-
-            // Hit Wall
-            GameRoleDomain.ApplyHitWall(ctx, role, fixdt);
-
-        }
-
-        static void FixedTickFSM_Dead(GameBusinessContext ctx, RoleEntity role, float fixdt) {
-            RoleFSMComponent fsm = role.FSM_GetComponent();
+        static void FixedTickFSM_Dead(GameBusinessContext ctx, BoidEntity boid, float fixdt) {
+            BoidFSMComponent fsm = boid.FSM_GetComponent();
             if (fsm.dead_isEntering) {
                 fsm.dead_isEntering = false;
             }
 
             // VFX
-            VFXApp.AddVFXToWorld(ctx.vfxContext, role.deadVFXName, role.deadVFXDuration, role.Pos);
+            VFXApp.AddVFXToWorld(ctx.vfxContext, boid.deadVFXName, boid.deadVFXDuration, boid.Pos);
 
             // Camera
             CameraApp.ShakeOnce(ctx.cameraContext, ctx.cameraContext.mainCameraID);
-            role.needTearDown = true;
+            boid.needTearDown = true;
         }
 
     }

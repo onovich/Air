@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.Tilemaps;
 using UnityEngine.AddressableAssets;
 
-namespace Leap
+namespace Air
 {
 
     public static class AssetsInfra

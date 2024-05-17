@@ -1,9 +1,9 @@
 using System;
 using UnityEngine;
 
-namespace Leap {
+namespace Air {
 
-    [CreateAssetMenu(fileName = "SO_Spike", menuName = "Leap/SpikeTM")]
+    [CreateAssetMenu(fileName = "SO_Spike", menuName = "Air/SpikeTM")]
     public class SpikeTM : ScriptableObject {
 
         public int typeID;

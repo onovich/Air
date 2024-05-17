@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-namespace Leap {
+namespace Air {
 
     public class BlockEntity : MonoBehaviour {
 
@@ -16,7 +16,6 @@ namespace Leap {
 
         // Pos
         public Vector2 Pos => transform.position;
-        public Vector2Int PosInt => Pos_GetPosInt();
 
         public void Ctor() {
         }
@@ -26,8 +25,8 @@ namespace Leap {
             transform.position = pos;
         }
 
-        Vector2Int Pos_GetPosInt() {
-            return transform.position.RoundToVector3Int().ToVector2Int();
+        Vector2 Pos_GetPos() {
+            return transform.position;
         }
 
         // Size

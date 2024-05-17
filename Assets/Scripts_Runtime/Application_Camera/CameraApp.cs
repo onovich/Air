@@ -5,7 +5,7 @@ using TenonKit.Prism;
 using TenonKit.Vista.Camera2D;
 using UnityEngine;
 
-namespace Leap {
+namespace Air {
 
     public static class CameraApp {
 
@@ -26,11 +26,11 @@ namespace Leap {
 
         public static void ShakeOnce(CameraAppContext ctx, int cameraID) {
             var config = ctx.templateInfraContext.Config_Get();
-            var shakeFrequency = config.roleDeadShakeFrequency;
-            var shakeAmplitude = config.roleDeadShakeAmplitude;
-            var shakeDuration = config.roleDeadShakeDuration;
-            var shakeEasingType = config.roleDeadShakeEasingType;
-            var shakeEasingMode = config.roleDeadShakeEasingMode;
+            var shakeFrequency = config.boidDeadShakeFrequency;
+            var shakeAmplitude = config.boidDeadShakeAmplitude;
+            var shakeDuration = config.boidDeadShakeDuration;
+            var shakeEasingType = config.boidDeadShakeEasingType;
+            var shakeEasingMode = config.boidDeadShakeEasingMode;
             ctx.cameraCore.ShakeOnce(cameraID, shakeFrequency, shakeAmplitude, shakeDuration, shakeEasingType, shakeEasingMode);
         }
 

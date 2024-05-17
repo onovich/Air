@@ -1,14 +1,13 @@
 using System;
 using UnityEngine;
 
-namespace Leap {
+namespace Air {
 
-    [CreateAssetMenu(fileName = "SO_Block", menuName = "Leap/BlockTM")]
+    [CreateAssetMenu(fileName = "SO_Block", menuName = "Air/BlockTM")]
     public class BlockTM : ScriptableObject {
 
         public int typeID;
         public Sprite mesh;
-        public float fallingFriction;
 
     }
 

@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using MortiseFrame.Loom;
 using UnityEngine;
-using Leap.UI;
+using Air.UI;
 
-namespace Leap {
+namespace Air {
 
     public class UIAppContext {
 

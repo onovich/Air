@@ -9,7 +9,7 @@ using System.Collections.Generic;
 using UnityEngine.AddressableAssets;
 using UnityEditor.AddressableAssets.Settings;
 
-namespace Leap.Modifier {
+namespace Air.Modifier {
 
     public static class AddressableHelper {
 

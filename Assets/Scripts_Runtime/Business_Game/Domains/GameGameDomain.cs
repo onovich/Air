@@ -2,7 +2,7 @@ using MortiseFrame.Swing;
 using TenonKit.Prism;
 using UnityEngine;
 
-namespace Leap {
+namespace Air {
 
     public static class GameGameDomain {
 
@@ -22,20 +22,15 @@ namespace Leap {
                 GLog.LogError($"MapTM Not Found {mapTypeID}");
             }
 
-            // - Terrain
-            var terrainPosArr = mapTM.terrainSpawnPosArr;
-            var terrainTypeIDArr = mapTM.terrainTypeIDArr;
-            GameMapDomain.Terrain_SetAll(ctx, map, terrainPosArr, terrainTypeIDArr);
-
-            // Role
+            // Boid
             var player = ctx.playerEntity;
 
-            // - Owner
+            // - Player
             var spawnPoint = mapTM.SpawnPoint;
-            var owner = GameRoleDomain.Spawn(ctx,
-                                             config.ownerRoleTypeID,
+            var owner = GameBoidDomain.Spawn(ctx,
+                                             config.playerBoidTypeID,
                                              spawnPoint);
-            player.ownerRoleEntityID = owner.entityID;
+            player.ownerBoidEntityID = owner.entityID;
             ctx.ownerSpawnPoint = spawnPoint;
 
             // Block
@@ -49,9 +44,8 @@ namespace Leap {
             var spikeTMArr = mapTM.spikeSpawnArr;
             var spikePosArr = mapTM.spikeSpawnPosArr;
             var spikeSizeArr = mapTM.spikeSpawnSizeArr;
-            var spikeRotationZArr = mapTM.spikeSpawnRotationZArr;
             var spikeIndexArr = mapTM.spikeSpawnIndexArr;
-            GameSpikeDomain.SpawnAll(ctx, spikeTMArr, spikePosArr, spikeSizeArr, spikeRotationZArr, spikeIndexArr);
+            GameSpikeDomain.SpawnAll(ctx, spikeTMArr, spikePosArr, spikeSizeArr, spikeIndexArr);
 
             // Camera
             CameraApp.Init(ctx.cameraContext, owner.transform, owner.Pos, mapTM.cameraConfinerWorldMax, mapTM.cameraConfinerWorldMin);
@@ -81,12 +75,10 @@ namespace Leap {
         }
 
         public static void ApplyGameResult(GameBusinessContext ctx) {
-            var owner = ctx.Role_GetOwner();
+            var owner = ctx.Boid_GetOwner();
             var game = ctx.gameEntity;
             var config = ctx.templateInfraContext.Config_Get();
-            if (owner == null || owner.needTearDown) {
-                game.fsmComponent.GameOver_Enter(config.gameResetEnterTime);
-            }
+            // game.fsmComponent.GameOver_Enter(config.gameResetEnterTime);
         }
 
         public static void ExitGame(GameBusinessContext ctx) {
@@ -97,11 +89,11 @@ namespace Leap {
             // Map
             GameMapDomain.UnSpawn(ctx);
 
-            // Role
-            int roleLen = ctx.roleRepo.TakeAll(out var roleArr);
-            for (int i = 0; i < roleLen; i++) {
-                var role = roleArr[i];
-                GameRoleDomain.UnSpawn(ctx, role);
+            // Boid
+            int boidLen = ctx.boidRepo.TakeAll(out var boidArr);
+            for (int i = 0; i < boidLen; i++) {
+                var boid = boidArr[i];
+                GameBoidDomain.UnSpawn(ctx, boid);
             }
 
             // Block

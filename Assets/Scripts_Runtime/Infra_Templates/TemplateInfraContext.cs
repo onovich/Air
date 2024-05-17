@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine.ResourceManagement.AsyncOperations;
 
-namespace Leap {
+namespace Air {
 
     public class TemplateInfraContext {
 
@@ -11,8 +11,8 @@ namespace Leap {
         Dictionary<int, MapTM> mapDict;
         public AsyncOperationHandle mapHandle;
 
-        Dictionary<int, RoleTM> roleDict;
-        public AsyncOperationHandle roleHandle;
+        Dictionary<int, BoidTM> boidDict;
+        public AsyncOperationHandle boidHandle;
 
         Dictionary<int, BlockTM> blockDict;
         public AsyncOperationHandle blockHandle;
@@ -20,15 +20,11 @@ namespace Leap {
         Dictionary<int, SpikeTM> spikeDict;
         public AsyncOperationHandle spikeHandle;
 
-        Dictionary<int, TerrainTM> terrainDict;
-        public AsyncOperationHandle terrainHandle;
-
         public TemplateInfraContext() {
             mapDict = new Dictionary<int, MapTM>();
-            roleDict = new Dictionary<int, RoleTM>();
+            boidDict = new Dictionary<int, BoidTM>();
             blockDict = new Dictionary<int, BlockTM>();
             spikeDict = new Dictionary<int, SpikeTM>();
-            terrainDict = new Dictionary<int, TerrainTM>();
         }
 
         // Game
@@ -53,15 +49,15 @@ namespace Leap {
             return has;
         }
 
-        // Role
-        public void Role_Add(RoleTM role) {
-            roleDict.Add(role.typeID, role);
+        // Boid
+        public void Boid_Add(BoidTM Boid) {
+            boidDict.Add(Boid.typeID, Boid);
         }
 
-        public bool Role_TryGet(int typeID, out RoleTM role) {
-            var has = roleDict.TryGetValue(typeID, out role);
+        public bool Boid_TryGet(int typeID, out BoidTM Boid) {
+            var has = boidDict.TryGetValue(typeID, out Boid);
             if (!has) {
-                GLog.LogError($"Role {typeID} not found");
+                GLog.LogError($"Boid {typeID} not found");
             }
             return has;
         }
@@ -92,26 +88,12 @@ namespace Leap {
             return has;
         }
 
-        // Terrain
-        public void Terrain_Add(TerrainTM terrain) {
-            terrainDict.Add(terrain.typeID, terrain);
-        }
-
-        public bool Terrain_TryGet(int typeID, out TerrainTM terrain) {
-            var has = terrainDict.TryGetValue(typeID, out terrain);
-            if (!has) {
-                GLog.LogError($"Terrain {typeID} not found");
-            }
-            return has;
-        }
-
         // Clear
         public void Clear() {
             mapDict.Clear();
-            roleDict.Clear();
+            boidDict.Clear();
             blockDict.Clear();
             spikeDict.Clear();
-            terrainDict.Clear();
         }
 
     }

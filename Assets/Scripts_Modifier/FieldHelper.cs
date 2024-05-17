@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
-namespace Leap.Modifier {
+namespace Air.Modifier {
 
     public static class FieldHelper {
 

@@ -10,18 +10,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
-  m_Name: TM_Role
+  m_Name: TM_Boid
   m_EditorClassIdentifier: 
-  m_GroupName: TM_Role
+  m_GroupName: TM_Boid
   m_Data:
     m_SerializedData: []
   m_GUID: ec113d2ed3fd86f4d83791aee1a3f345
   m_SerializeEntries:
-  - m_GUID: dc729f3a9797af54185e0ee62c313866
-    m_Address: SO_Role_0001
+  - m_GUID: b74c6ea0c63d24141bc55dc25267ba3e
+    m_Address: SO_Boid_001
     m_ReadOnly: 0
     m_SerializedLabels:
-    - TM_Role
+    - TM_Boid
     FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: bcda1c8e574105f42bf63fc8b4423c66, type: 2}

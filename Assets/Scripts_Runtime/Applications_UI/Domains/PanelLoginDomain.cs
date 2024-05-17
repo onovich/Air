@@ -2,7 +2,7 @@ using System;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Leap.UI {
+namespace Air.UI {
 
     public static class PanelLoginDomain {
 

@@ -1,6 +1,6 @@
 using System;
 
-namespace Leap.UI {
+namespace Air.UI {
 
     public class UIEventCenter {
 

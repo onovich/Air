@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Leap {
+namespace Air {
 
     public static class CameraExtension {
 

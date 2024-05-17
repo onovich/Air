@@ -1,7 +1,7 @@
 using System.Threading.Tasks;
 using UnityEngine.AddressableAssets;
 
-namespace Leap {
+namespace Air {
 
     public static class TemplateInfra {
 
@@ -24,12 +24,12 @@ namespace Leap {
             }
 
             {
-                var handle = Addressables.LoadAssetsAsync<RoleTM>("TM_Role", null);
-                var roleList = await handle.Task;
-                foreach (var tm in roleList) {
-                    ctx.Role_Add(tm);
+                var handle = Addressables.LoadAssetsAsync<BoidTM>("TM_Boid", null);
+                var boidList = await handle.Task;
+                foreach (var tm in boidList) {
+                    ctx.Boid_Add(tm);
                 }
-                ctx.roleHandle = handle;
+                ctx.boidHandle = handle;
             }
 
             {
@@ -50,16 +50,6 @@ namespace Leap {
                 ctx.spikeHandle = handle;
             }
 
-            {
-                var handle = Addressables.LoadAssetsAsync<TerrainTM>("TM_Terrain", null);
-                var terrainList = await handle.Task;
-                foreach (var tm in terrainList) {
-                    ctx.Terrain_Add(tm);
-                }
-                ctx.terrainHandle = handle;
-
-            }
-
         }
 
         public static void Release(TemplateInfraContext ctx) {
@@ -69,17 +59,14 @@ namespace Leap {
             if (ctx.mapHandle.IsValid()) {
                 Addressables.Release(ctx.mapHandle);
             }
-            if (ctx.roleHandle.IsValid()) {
-                Addressables.Release(ctx.roleHandle);
+            if (ctx.boidHandle.IsValid()) {
+                Addressables.Release(ctx.boidHandle);
             }
             if (ctx.blockHandle.IsValid()) {
                 Addressables.Release(ctx.blockHandle);
             }
             if (ctx.spikeHandle.IsValid()) {
                 Addressables.Release(ctx.spikeHandle);
-            }
-            if (ctx.terrainHandle.IsValid()) {
-                Addressables.Release(ctx.terrainHandle);
             }
         }
 

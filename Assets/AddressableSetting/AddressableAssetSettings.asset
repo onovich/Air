@@ -100,7 +100,7 @@ MonoBehaviour:
     - Entity
     - VFX
     - TM_Config
-    - TM_Role
+    - TM_Boid
     - TM_Block
     - TM_Map
     - TM_Spike

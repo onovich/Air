@@ -10,8 +10,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 57d38fd9f65d647a4a6ee5d85ea8574e, type: 3}
-  m_Name: SO_Block_0001
+  m_Name: SO_Boid_001
   m_EditorClassIdentifier: 
   typeID: 1
-  mesh: {fileID: 21300000, guid: 01787af68450246e3b2912d494821db6, type: 3}
-  fallingFriction: 0
+  allyStatus: 1
+  moveSpeed: 10
+  rotationSpeed: 10
+  hpMax: 1
+  separationWeight: 1
+  alignmentWeight: 1
+  cohesionWeight: 1
+  mesh: {fileID: 21300000, guid: 9ba07533b73844d49b978f413e8b0ad5, type: 3}
+  color: {r: 1, g: 1, b: 1, a: 1}
+  deadVFX: {fileID: 1046417506903995189, guid: 4cc547ee9ad754a728a343efb6c300c0, type: 3}
+  deadVFXDuration: 2

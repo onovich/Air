@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Leap {
+namespace Air {
 
     public static class GameFactory {
 
@@ -24,69 +24,59 @@ namespace Leap {
             return map;
         }
 
-        public static RoleEntity Role_Spawn(TemplateInfraContext templateInfraContext,
+        public static BoidEntity Boid_Spawn(TemplateInfraContext templateInfraContext,
                                  AssetsInfraContext assetsInfraContext,
                                  IDRecordService idRecordService,
                                  int typeID,
                                  Vector2 pos) {
 
-            var has = templateInfraContext.Role_TryGet(typeID, out var roleTM);
+            var has = templateInfraContext.Boid_TryGet(typeID, out var boidTM);
             if (!has) {
-                GLog.LogError($"Role {typeID} not found");
+                GLog.LogError($"Boid {typeID} not found");
             }
 
-            var prefab = assetsInfraContext.Entity_GetRole();
-            var role = GameObject.Instantiate(prefab).GetComponent<RoleEntity>();
-            role.Ctor();
+            var prefab = assetsInfraContext.Entity_GetBoid();
+            var boid = GameObject.Instantiate(prefab).GetComponent<BoidEntity>();
+            boid.Ctor();
 
             // Base Info
-            role.entityID = idRecordService.PickRoleEntityID();
-            role.typeID = typeID;
-            role.allyStatus = roleTM.allyStatus;
-            role.aiType = roleTM.aiType;
+            boid.entityID = idRecordService.PickBoidEntityID();
+            boid.typeID = typeID;
+            boid.allyStatus = boidTM.allyStatus;
 
             // Set Attr
-            role.moveSpeed = roleTM.moveSpeed;
-            role.jumpForceY = roleTM.jumpForceY;
-            role.wallJumpForceY = roleTM.wallJumpForceY;
-            role.wallJumpForceX = roleTM.wallJumpForceX;
-            role.g = roleTM.g;
-            role.fallingSpeedMax = roleTM.fallingSpeedMax;
-            role.hp = roleTM.hp;
-            role.hpMax = roleTM.hp;
-
-            // Set Skill
-            role.hasWallJump = roleTM.hasWallJump;
-            role.hasDoubleJump = roleTM.hasDoubleJump;
-            role.hasDash = roleTM.hasDash;
+            boid.moveSpeed = boidTM.moveSpeed;
+            boid.rotationSpeed = boidTM.rotationSpeed;
+            boid.hp = boidTM.hpMax;
+            boid.hpMax = boidTM.hpMax;
 
             // Set Pos
-            role.Pos_SetPos(pos);
+            boid.Pos_SetPos(pos);
 
             // Set Mesh
-            role.Mesh_Set(roleTM.mesh);
+            boid.Mesh_Set(boidTM.mesh);
 
             // Set FSM
-            role.FSM_EnterIdle();
+            boid.FSM_EnterIdle();
 
             // Set VFX
-            role.deadVFXName = roleTM.deadVFX.name;
-            role.deadVFXDuration = roleTM.deadVFXDuration;
+            boid.deadVFXName = boidTM.deadVFX.name;
+            boid.deadVFXDuration = boidTM.deadVFXDuration;
 
-            return role;
+            return boid;
         }
 
         public static BlockEntity Block_Spawn(TemplateInfraContext templateInfraContext,
                                   AssetsInfraContext assetsInfraContext,
                                   IDRecordService idRecordService,
                                   int typeID,
-                                  Vector2Int pos,
-                                  Vector2Int size,
+                                  Vector2 pos,
+                                  Vector2 size,
                                   int index) {
 
             var has = templateInfraContext.Block_TryGet(typeID, out var blockTM);
             if (!has) {
-                GLog.LogError($"Role {typeID} not found");
+                GLog.LogError($"Boid {typeID} not found");
             }
 
             var prefab = assetsInfraContext.Entity_GetBlock();
@@ -116,14 +106,13 @@ namespace Leap {
                                   AssetsInfraContext assetsInfraContext,
                                   IDRecordService idRecordService,
                                   int typeID,
-                                  Vector2Int pos,
-                                  Vector2Int size,
-                                  int rotationZ,
+                                  Vector2 pos,
+                                  Vector2 size,
                                   int index) {
 
             var has = templateInfraContext.Spike_TryGet(typeID, out var blockTM);
             if (!has) {
-                GLog.LogError($"Role {typeID} not found");
+                GLog.LogError($"Boid {typeID} not found");
             }
 
             var prefab = assetsInfraContext.Entity_GetSpike();

@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Leap {
+namespace Air {
 
     public static class GameBusiness {
 
@@ -46,7 +46,7 @@ namespace Leap {
             var game = ctx.gameEntity;
             var status = game.fsmComponent.status;
             if (status == GameStatus.Gaming) {
-                GameInputDomain.Owner_BakeInput(ctx, ctx.Role_GetOwner());
+                GameInputDomain.Owner_BakeInput(ctx, ctx.Boid_GetOwner());
             }
         }
 
@@ -55,11 +55,11 @@ namespace Leap {
             var status = game.fsmComponent.status;
             if (status == GameStatus.Gaming) {
 
-                // Roles
-                var roleLen = ctx.roleRepo.TakeAll(out var roleArr);
-                for (int i = 0; i < roleLen; i++) {
-                    var role = roleArr[i];
-                    GameRoleDomain.CheckAndUnSpawn(ctx, role);
+                // Boids
+                var boidLen = ctx.boidRepo.TakeAll(out var boidArr);
+                for (int i = 0; i < boidLen; i++) {
+                    var boid = boidArr[i];
+                    GameBoidDomain.CheckAndUnSpawn(ctx, boid);
                 }
 
                 // Result
@@ -76,20 +76,16 @@ namespace Leap {
             var status = game.fsmComponent.status;
             if (status == GameStatus.Gaming) {
 
-                // Roles
-                var roleLen = ctx.roleRepo.TakeAll(out var roleArr);
-                for (int i = 0; i < roleLen; i++) {
-                    var role = roleArr[i];
-                    GameRoleFSMController.FixedTickFSM(ctx, role, fixdt);
+                // Boids
+                var boidLen = ctx.boidRepo.TakeAll(out var boidArr);
+                for (int i = 0; i < boidLen; i++) {
+                    var boid = boidArr[i];
+                    GameBoidFSMController.FixedTickFSM(ctx, boid, fixdt);
                 }
 
                 Physics2D.Simulate(fixdt);
 
-                for (int i = 0; i < roleLen; i++) {
-                    var role = roleArr[i];
-                    GameRoleDomain.BoxCastGround(ctx, role);
-                    GameRoleDomain.BoxCastWall(ctx, role);
-                }
+                // Raycast
 
             }
 
@@ -99,7 +95,7 @@ namespace Leap {
 
             var game = ctx.gameEntity;
             var status = game.fsmComponent.status;
-            var owner = ctx.Role_GetOwner();
+            var owner = ctx.Boid_GetOwner();
             if (status == GameStatus.Gaming || status == GameStatus.GameOver) {
 
                 // Camera

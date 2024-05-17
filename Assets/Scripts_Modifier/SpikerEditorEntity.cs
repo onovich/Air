@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Leap.Modifier {
+namespace Air.Modifier {
 
     public class SpikerEditorEntity : MonoBehaviour {
 
@@ -11,24 +11,16 @@ namespace Leap.Modifier {
             this.gameObject.name = $"Spike - {spikeTM.typeID} - {index}";
         }
 
-        public Vector2Int GetPosInt() {
-            var posInt = this.transform.position.RoundToVector2Int();
-            this.transform.position = posInt.ToVector3Int();
-            return posInt;
+        public Vector2 GetPos() {
+            var pos = this.transform.position;
+            this.transform.position = pos;
+            return pos;
         }
 
-        public Vector2Int GetSizeInt() {
+        public Vector2 GetSizeInt() {
             var size = GetComponent<SpriteRenderer>().size;
-            var sizeInt = size.RoundToVector2Int();
+            var sizeInt = size;
             return sizeInt;
-        }
-
-        public int GetRotationZInt() {
-            var rotation = this.transform.rotation;
-            var rotationZInt = Mathf.RoundToInt(rotation.z);
-            rotation.z = rotationZInt;
-            this.transform.rotation = rotation;
-            return rotationZInt;
         }
 
     }

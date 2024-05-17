@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Leap {
+namespace Air {
 
     public class GameBusinessContext {
 
@@ -12,7 +12,7 @@ namespace Leap {
         public InputEntity inputEntity; // External
         public MapEntity currentMapEntity;
 
-        public RoleRepository roleRepo;
+        public BoidRepository boidRepo;
         public BlockRepository blockRepo;
         public SpikeRepository spikeRepo;
 
@@ -44,7 +44,7 @@ namespace Leap {
             gameEntity = new GameEntity();
             playerEntity = new PlayerEntity();
             idRecordService = new IDRecordService();
-            roleRepo = new RoleRepository();
+            boidRepo = new BoidRepository();
             blockRepo = new BlockRepository();
             spikeRepo = new SpikeRepository();
             hitResults = new RaycastHit2D[100];
@@ -52,19 +52,19 @@ namespace Leap {
 
         public void Reset() {
             idRecordService.Reset();
-            roleRepo.Clear();
+            boidRepo.Clear();
             blockRepo.Clear();
             spikeRepo.Clear();
         }
 
-        // Role
-        public RoleEntity Role_GetOwner() {
-            roleRepo.TryGetRole(playerEntity.ownerRoleEntityID, out var role);
-            return role;
+        // Boid
+        public BoidEntity Boid_GetOwner() {
+            boidRepo.TryGetBoid(playerEntity.ownerBoidEntityID, out var boid);
+            return boid;
         }
 
-        public void Role_ForEach(Action<RoleEntity> onAction) {
-            roleRepo.ForEach(onAction);
+        public void Boid_ForEach(Action<BoidEntity> onAction) {
+            boidRepo.ForEach(onAction);
         }
 
         // Block

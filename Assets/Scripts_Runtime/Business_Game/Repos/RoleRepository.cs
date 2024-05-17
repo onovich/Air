@@ -2,70 +2,70 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Leap {
+namespace Air {
 
-    public class RoleRepository {
+    public class BoidRepository {
 
-        Dictionary<int, RoleEntity> all;
+        Dictionary<int, BoidEntity> all;
 
-        RoleEntity[] temp;
+        BoidEntity[] temp;
 
-        public RoleRepository() {
-            all = new Dictionary<int, RoleEntity>();
-            temp = new RoleEntity[1000];
+        public BoidRepository() {
+            all = new Dictionary<int, BoidEntity>();
+            temp = new BoidEntity[1000];
         }
 
-        public void Add(RoleEntity role) {
-            all.Add(role.entityID, role);
+        public void Add(BoidEntity boid) {
+            all.Add(boid.entityID, boid);
         }
 
-        public int TakeAll(out RoleEntity[] roles) {
+        public int TakeAll(out BoidEntity[] boids) {
             int count = all.Count;
             if (count > temp.Length) {
-                temp = new RoleEntity[(int)(count * 1.5f)];
+                temp = new BoidEntity[(int)(count * 1.5f)];
             }
             all.Values.CopyTo(temp, 0);
-            roles = temp;
+            boids = temp;
             return count;
         }
 
-        public void Remove(RoleEntity role) {
-            all.Remove(role.entityID);
+        public void Remove(BoidEntity boid) {
+            all.Remove(boid.entityID);
         }
 
-        public bool TryGetRole(int entityID, out RoleEntity role) {
-            return all.TryGetValue(entityID, out role);
+        public bool TryGetBoid(int entityID, out BoidEntity boid) {
+            return all.TryGetValue(entityID, out boid);
         }
 
         public bool IsInRange(int entityID, in Vector2 pos, float range) {
-            bool has = TryGetRole(entityID, out var role);
+            bool has = TryGetBoid(entityID, out var boid);
             if (!has) {
                 return false;
             }
-            return Vector2.SqrMagnitude(role.Pos - pos) <= range * range;
+            return Vector2.SqrMagnitude(boid.Pos - pos) <= range * range;
         }
 
-        public void ForEach(Action<RoleEntity> action) {
-            foreach (var role in all.Values) {
-                action(role);
+        public void ForEach(Action<BoidEntity> action) {
+            foreach (var boid in all.Values) {
+                action(boid);
             }
         }
 
-        public RoleEntity GetNeareast(AllyStatus allyStatus, Vector2 pos, float radius) {
-            RoleEntity nearestRole = null;
+        public BoidEntity GetNeareast(AllyStatus allyStatus, Vector2 pos, float radius) {
+            BoidEntity nearestBoid = null;
             float nearestDist = float.MaxValue;
             float radiusSqr = radius * radius;
-            foreach (var role in all.Values) {
-                if (role.allyStatus != allyStatus) {
+            foreach (var boid in all.Values) {
+                if (boid.allyStatus != allyStatus) {
                     continue;
                 }
-                float dist = Vector2.SqrMagnitude(role.Pos - pos);
+                float dist = Vector2.SqrMagnitude(boid.Pos - pos);
                 if (dist <= radiusSqr && dist < nearestDist) {
                     nearestDist = dist;
-                    nearestRole = role;
+                    nearestBoid = boid;
                 }
             }
-            return nearestRole;
+            return nearestBoid;
         }
 
         public void Clear() {
