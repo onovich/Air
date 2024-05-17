@@ -2,11 +2,14 @@ using System;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-namespace Air {
+namespace Leap {
 
     public class InputEntity {
 
         public Vector2 moveAxis;
+        public float jumpAxis;
+        public bool isHoldWall;
+
         InputKeybindingComponent keybindingCom;
 
         public void Ctor() {
@@ -15,10 +18,14 @@ namespace Air {
 
         public void ProcessInput(Camera camera, float dt) {
 
-            if (keybindingCom.IsKeyPressing(InputKeyEnum.TurnLeft)) {
+            if (keybindingCom.IsKeyPressing(InputKeyEnum.MoveLeft)) {
                 moveAxis.x = -1;
-            } else if (keybindingCom.IsKeyPressing(InputKeyEnum.TurnRight)) {
+            }
+            if (keybindingCom.IsKeyPressing(InputKeyEnum.MoveRight)) {
                 moveAxis.x = 1;
+            }
+            if (keybindingCom.IsKeyDown(InputKeyEnum.Jump)) {
+                jumpAxis = 1;
             }
 
         }
@@ -29,6 +36,8 @@ namespace Air {
 
         public void Reset() {
             moveAxis = Vector2.zero;
+            jumpAxis = 0f;
+            isHoldWall = false; 
         }
 
     }

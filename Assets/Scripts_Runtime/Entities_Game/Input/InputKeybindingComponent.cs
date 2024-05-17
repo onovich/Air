@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Air {
+namespace Leap {
 
     public struct InputKeybindingComponent {
 

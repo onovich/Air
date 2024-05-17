@@ -1,11 +1,11 @@
 using UnityEngine;
 
-namespace Air {
+namespace Leap {
 
     public static class GameBusiness {
 
         public static void Init(GameBusinessContext ctx) {
-
+            Physics2D.IgnoreLayerCollision(LayConst.ROLE, LayConst.ROLE, true);
         }
 
         public static void StartGame(GameBusinessContext ctx) {
@@ -19,20 +19,24 @@ namespace Air {
         public static void Tick(GameBusinessContext ctx, float dt) {
 
             InputEntity inputEntity = ctx.inputEntity;
-            inputEntity.Reset();
 
             ProcessInput(ctx, dt);
             PreTick(ctx, dt);
 
-            float restTime = dt;
             const float intervalTime = 0.01f;
-            for (; restTime >= intervalTime; restTime -= intervalTime) {
-                FixedTick(ctx, intervalTime);
-            }
-            if (restTime > 0) {
-                FixedTick(ctx, restTime);
+            ref float restSec = ref ctx.fixedRestSec;
+            restSec += dt;
+            if (restSec < intervalTime) {
+                FixedTick(ctx, restSec);
+                restSec = 0;
+            } else {
+                while (restSec >= intervalTime) {
+                    restSec -= intervalTime;
+                    FixedTick(ctx, intervalTime);
+                }
             }
             LateTick(ctx, dt);
+            inputEntity.Reset();
 
         }
 
@@ -42,7 +46,7 @@ namespace Air {
             var game = ctx.gameEntity;
             var status = game.fsmComponent.status;
             if (status == GameStatus.Gaming) {
-                GameInputDomain.Owner_BakeInput(ctx, ctx.Boid_GetOwner());
+                GameInputDomain.Owner_BakeInput(ctx, ctx.Role_GetOwner());
             }
         }
 
@@ -50,6 +54,19 @@ namespace Air {
             var game = ctx.gameEntity;
             var status = game.fsmComponent.status;
             if (status == GameStatus.Gaming) {
+
+                // Roles
+                var roleLen = ctx.roleRepo.TakeAll(out var roleArr);
+                for (int i = 0; i < roleLen; i++) {
+                    var role = roleArr[i];
+                    GameRoleDomain.CheckAndUnSpawn(ctx, role);
+                }
+
+                // Result
+                GameGameDomain.ApplyGameResult(ctx);
+            }
+            if (status == GameStatus.GameOver) {
+                GameGameDomain.ApplyRestartGame(ctx);
             }
         }
 
@@ -59,38 +76,62 @@ namespace Air {
             var status = game.fsmComponent.status;
             if (status == GameStatus.Gaming) {
 
-                // Boids
-                ctx.boidRepo.ForEach((boid) => {
-                    GameBoidFSMController.FixedTickFSM(ctx, boid, fixdt);
-                });
-
-                // - UpdateLastPos
-                ctx.boidRepo.ForEach(boid => {
-                    GameBoidDomain.UpdatePosDict(ctx, boid);
-                });
+                // Roles
+                var roleLen = ctx.roleRepo.TakeAll(out var roleArr);
+                for (int i = 0; i < roleLen; i++) {
+                    var role = roleArr[i];
+                    GameRoleFSMController.FixedTickFSM(ctx, role, fixdt);
+                }
 
                 Physics2D.Simulate(fixdt);
+
+                for (int i = 0; i < roleLen; i++) {
+                    var role = roleArr[i];
+                    GameRoleDomain.BoxCastGround(ctx, role);
+                    GameRoleDomain.BoxCastWall(ctx, role);
+                }
+
             }
+
         }
 
         static void LateTick(GameBusinessContext ctx, float dt) {
 
             var game = ctx.gameEntity;
             var status = game.fsmComponent.status;
-            var owner = ctx.Boid_GetOwner();
-            if (status == GameStatus.Gaming) {
+            var owner = ctx.Role_GetOwner();
+            if (status == GameStatus.Gaming || status == GameStatus.GameOver) {
 
                 // Camera
+                CameraApp.LateTick(ctx.cameraContext, dt);
 
                 // UI
+
             }
+            // VFX
+            VFXApp.LateTick(ctx.vfxContext, dt);
         }
 
         public static void TearDown(GameBusinessContext ctx) {
-            ExitGame(ctx);
+            var game = ctx.gameEntity;
+            var status = game.fsmComponent.status;
+            if (status == GameStatus.Gaming) {
+                ExitGame(ctx);
+            }
         }
 
-        // UI
+        public static void OnDrawGizmos(GameBusinessContext ctx, bool drawCameraGizmos) {
+            if (ctx == null) {
+                return;
+            }
+            var game = ctx.gameEntity;
+            var status = game.fsmComponent.status;
+            if (status == GameStatus.Gaming) {
+                if (drawCameraGizmos) {
+                    CameraApp.OnDrawGizmos(ctx.cameraContext);
+                }
+            }
+        }
 
     }
 

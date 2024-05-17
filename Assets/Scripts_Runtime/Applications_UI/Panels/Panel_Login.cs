@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using MortiseFrame.Loom;
 
-namespace Air.UI {
+namespace Leap.UI {
 
     public class Panel_Login : MonoBehaviour, IPanel {
 

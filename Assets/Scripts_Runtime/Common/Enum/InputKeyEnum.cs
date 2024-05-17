@@ -1,11 +1,11 @@
-namespace Air {
+namespace Leap {
 
     public enum InputKeyEnum {
 
         None,
-
-        TurnRight = 100,
-        TurnLeft = 110,
+        MoveRight = 100,
+        MoveLeft = 110,
+        Jump = 120,
 
     }
 

@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Air{
+namespace Leap{
 
     public class LoginBusiness {
 
@@ -18,7 +18,7 @@ namespace Air{
         public static void ExitApplication(LoginBusinessContext ctx) {
             Exit(ctx);
             Application.Quit();
-            ALog.Log("Application.Quit");
+            GLog.Log("Application.Quit");
         }
 
         public static void OnUILoginClick(LoginBusinessContext ctx) {

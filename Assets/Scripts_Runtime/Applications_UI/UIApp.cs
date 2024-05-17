@@ -1,10 +1,10 @@
 using System;
 using System.Threading.Tasks;
-using Air.UI;
+using Leap.UI;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 
-namespace Air {
+namespace Leap {
     public static class UIApp {
 
         public static void Init(UIAppContext ctx) {
@@ -15,12 +15,13 @@ namespace Air {
             try {
                 await ctx.uiCore.LoadAssets();
             } catch (Exception e) {
-                ALog.LogError(e.ToString());
+                GLog.LogError(e.ToString());
             }
         }
 
+        // Tick
         public static void LateTick(UIAppContext ctx, float dt) {
-
+            ctx.uiCore.LateTick(dt);
         }
 
         // Panel - Login

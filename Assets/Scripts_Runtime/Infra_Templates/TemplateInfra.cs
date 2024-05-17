@@ -1,7 +1,7 @@
 using System.Threading.Tasks;
 using UnityEngine.AddressableAssets;
 
-namespace Air {
+namespace Leap {
 
     public static class TemplateInfra {
 
@@ -15,12 +15,49 @@ namespace Air {
             }
 
             {
-                var handle = Addressables.LoadAssetsAsync<BoidTM>("TM_Boid", null);
-                var boidList = await handle.Task;
-                foreach (var tm in boidList) {
-                    ctx.Boid_Add(tm);
+                var handle = Addressables.LoadAssetsAsync<MapTM>("TM_Map", null);
+                var mapList = await handle.Task;
+                foreach (var tm in mapList) {
+                    ctx.Map_Add(tm);
                 }
-                ctx.boidHandle = handle;
+                ctx.mapHandle = handle;
+            }
+
+            {
+                var handle = Addressables.LoadAssetsAsync<RoleTM>("TM_Role", null);
+                var roleList = await handle.Task;
+                foreach (var tm in roleList) {
+                    ctx.Role_Add(tm);
+                }
+                ctx.roleHandle = handle;
+            }
+
+            {
+                var handle = Addressables.LoadAssetsAsync<BlockTM>("TM_Block", null);
+                var blockList = await handle.Task;
+                foreach (var tm in blockList) {
+                    ctx.Block_Add(tm);
+                }
+                ctx.blockHandle = handle;
+            }
+
+            {
+                var handle = Addressables.LoadAssetsAsync<SpikeTM>("TM_Spike", null);
+                var spikeList = await handle.Task;
+                foreach (var tm in spikeList) {
+                    ctx.Spike_Add(tm);
+                }
+                ctx.spikeHandle = handle;
+            }
+
+            {
+                var handle = Addressables.LoadAssetsAsync<TerrainTM>("TM_Terrain", null);
+                var terrainList = await handle.Task;
+                foreach (var tm in terrainList) {
+                    ctx.Terrain_Add(tm);
+                }
+                ctx.terrainHandle = handle;
+
             }
 
         }
@@ -29,8 +66,20 @@ namespace Air {
             if (ctx.configHandle.IsValid()) {
                 Addressables.Release(ctx.configHandle);
             }
-            if (ctx.boidHandle.IsValid()) {
-                Addressables.Release(ctx.boidHandle);
+            if (ctx.mapHandle.IsValid()) {
+                Addressables.Release(ctx.mapHandle);
+            }
+            if (ctx.roleHandle.IsValid()) {
+                Addressables.Release(ctx.roleHandle);
+            }
+            if (ctx.blockHandle.IsValid()) {
+                Addressables.Release(ctx.blockHandle);
+            }
+            if (ctx.spikeHandle.IsValid()) {
+                Addressables.Release(ctx.spikeHandle);
+            }
+            if (ctx.terrainHandle.IsValid()) {
+                Addressables.Release(ctx.terrainHandle);
             }
         }
 

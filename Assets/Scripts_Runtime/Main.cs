@@ -5,9 +5,11 @@ using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.U2D;
 
-namespace Air {
+namespace Leap {
 
     public class Main : MonoBehaviour {
+
+        [SerializeField] bool drawCameraGizmos;
 
         InputEntity inputEntity;
 
@@ -18,6 +20,8 @@ namespace Air {
         GameBusinessContext gameBusinessContext;
 
         UIAppContext uiAppContext;
+        VFXAppContext vfxAppContext;
+        CameraAppContext cameraAppContext;
 
         bool isLoadedAssets;
         bool isTearDown;
@@ -30,13 +34,16 @@ namespace Air {
             Canvas mainCanvas = GameObject.Find("MainCanvas").GetComponent<Canvas>();
             Transform hudFakeCanvas = GameObject.Find("HUDFakeCanvas").transform;
             Camera mainCamera = GameObject.Find("MainCamera").GetComponent<Camera>();
+            Transform vfxRoot = GameObject.Find("VFXRoot").transform;
 
             inputEntity = new InputEntity();
 
             loginBusinessContext = new LoginBusinessContext();
             gameBusinessContext = new GameBusinessContext();
 
-            uiAppContext = new UIAppContext(mainCanvas, hudFakeCanvas, mainCamera);
+            uiAppContext = new UIAppContext("UI", mainCanvas, hudFakeCanvas, mainCamera);
+            vfxAppContext = new VFXAppContext("VFX", vfxRoot);
+            cameraAppContext = new CameraAppContext(mainCamera, new Vector2(Screen.width, Screen.height));
 
             assetsInfraContext = new AssetsInfraContext();
             templateInfraContext = new TemplateInfraContext();
@@ -48,7 +55,11 @@ namespace Air {
             gameBusinessContext.assetsInfraContext = assetsInfraContext;
             gameBusinessContext.templateInfraContext = templateInfraContext;
             gameBusinessContext.uiContext = uiAppContext;
+            gameBusinessContext.vfxContext = vfxAppContext;
+            gameBusinessContext.cameraContext = cameraAppContext;
             gameBusinessContext.mainCamera = mainCamera;
+
+            cameraAppContext.templateInfraContext = templateInfraContext;
 
             // TODO Camera
 
@@ -62,7 +73,7 @@ namespace Air {
                     Enter();
                     isLoadedAssets = true;
                 } catch (Exception e) {
-                    ALog.LogError(e.ToString());
+                    GLog.LogError(e.ToString());
                 }
             };
             action.Invoke();
@@ -93,12 +104,14 @@ namespace Air {
 
             var inputEntity = this.inputEntity;
             inputEntity.Ctor();
-            inputEntity.Keybinding_Set(InputKeyEnum.TurnLeft, new KeyCode[] { KeyCode.A });
-            inputEntity.Keybinding_Set(InputKeyEnum.TurnRight, new KeyCode[] { KeyCode.D });
+            inputEntity.Keybinding_Set(InputKeyEnum.MoveLeft, new KeyCode[] { KeyCode.A, KeyCode.LeftArrow });
+            inputEntity.Keybinding_Set(InputKeyEnum.MoveRight, new KeyCode[] { KeyCode.D, KeyCode.RightArrow });
+            inputEntity.Keybinding_Set(InputKeyEnum.Jump, new KeyCode[] { KeyCode.Space });
 
             GameBusiness.Init(gameBusinessContext);
 
             UIApp.Init(uiAppContext);
+            VFXApp.Init(vfxAppContext);
 
         }
 
@@ -120,6 +133,7 @@ namespace Air {
 
         async Task LoadAssets() {
             await UIApp.LoadAssets(uiAppContext);
+            await VFXApp.LoadAssets(vfxAppContext);
             await AssetsInfra.LoadAssets(assetsInfraContext);
             await TemplateInfra.LoadAssets(templateInfraContext);
         }
@@ -146,6 +160,10 @@ namespace Air {
             TemplateInfra.Release(templateInfraContext);
             // TemplateInfra.ReleaseAssets(templateInfraContext);
             // UIApp.TearDown(uiAppContext);
+        }
+
+        void OnDrawGizmos() {
+            GameBusiness.OnDrawGizmos(gameBusinessContext, drawCameraGizmos);
         }
 
     }

@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using MortiseFrame.Loom;
 using UnityEngine;
-using Air.UI;
+using Leap.UI;
 
-namespace Air {
+namespace Leap {
 
     public class UIAppContext {
 
@@ -18,23 +18,9 @@ namespace Air {
         // Infra
         public TemplateInfraContext templateInfraContext;
 
-        public UIAppContext(Canvas mainCanvas, Transform worldSpaceFakeCanvas = null, Camera worldSpaceCamera = null) {
-            uiCore = new UICore("UI", mainCanvas, worldSpaceFakeCanvas, worldSpaceCamera);
+        public UIAppContext(string label, Canvas mainCanvas, Transform worldSpaceFakeCanvas = null, Camera worldSpaceCamera = null) {
+            uiCore = new UICore(label, mainCanvas, worldSpaceFakeCanvas, worldSpaceCamera);
             evt = new UIEventCenter();
-        }
-
-        // Load
-        public async Task LoadAssets() {
-            try {
-                await uiCore.LoadAssets();
-            } catch (Exception e) {
-                LLog.Log(e.ToString());
-            }
-        }
-
-        // Tick
-        public void LateTick(float dt) {
-            uiCore.LateTick(dt);
         }
 
         #region Unique Panel

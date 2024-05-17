@@ -1,4 +1,4 @@
-namespace Air {
+namespace Leap {
 
     public enum AllyStatus {
 

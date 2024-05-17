@@ -1,17 +1,17 @@
-namespace Air {
+namespace Leap {
 
     public class IDRecordService {
 
-        int boidEntityID;
+        int roleEntityID;
 
         public IDRecordService() { }
 
-        public int PickBoidEntityID() {
-            return ++boidEntityID;
+        public int PickRoleEntityID() {
+            return ++roleEntityID;
         }
 
         public void Reset() {
-            boidEntityID = 0;
+            roleEntityID = 0;
         }
     }
 

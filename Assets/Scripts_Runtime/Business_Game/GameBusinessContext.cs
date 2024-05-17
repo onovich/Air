@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Air {
+namespace Leap {
 
     public class GameBusinessContext {
 
@@ -10,11 +10,16 @@ namespace Air {
         public GameEntity gameEntity;
         public PlayerEntity playerEntity;
         public InputEntity inputEntity; // External
+        public MapEntity currentMapEntity;
 
-        public BoidRepository boidRepo;
+        public RoleRepository roleRepo;
+        public BlockRepository blockRepo;
+        public SpikeRepository spikeRepo;
 
-        // UI
+        // App
         public UIAppContext uiContext;
+        public VFXAppContext vfxContext;
+        public CameraAppContext cameraContext;
 
         // Camera
         public Camera mainCamera;
@@ -26,29 +31,45 @@ namespace Air {
         public TemplateInfraContext templateInfraContext;
         public AssetsInfraContext assetsInfraContext;
 
+        // Timer
+        public float fixedRestSec;
+
+        // SpawnPoint
+        public Vector2 ownerSpawnPoint;
+
+        // TEMP
+        public RaycastHit2D[] hitResults;
+
         public GameBusinessContext() {
             gameEntity = new GameEntity();
             playerEntity = new PlayerEntity();
             idRecordService = new IDRecordService();
-            boidRepo = new BoidRepository();
+            roleRepo = new RoleRepository();
+            blockRepo = new BlockRepository();
+            spikeRepo = new SpikeRepository();
+            hitResults = new RaycastHit2D[100];
         }
 
         public void Reset() {
-            boidRepo.Clear();
+            idRecordService.Reset();
+            roleRepo.Clear();
+            blockRepo.Clear();
+            spikeRepo.Clear();
         }
 
-        // Boid
-        public BoidEntity Boid_GetOwner() {
-            boidRepo.TryGetBoid(playerEntity.ownerBoidEntityID, out var boid);
-            return boid;
+        // Role
+        public RoleEntity Role_GetOwner() {
+            roleRepo.TryGetRole(playerEntity.ownerRoleEntityID, out var role);
+            return role;
         }
 
-        public void Boid_UpdatePosDict(BoidEntity boid) {
-            boidRepo.UpdatePosDict(boid);
+        public void Role_ForEach(Action<RoleEntity> onAction) {
+            roleRepo.ForEach(onAction);
         }
 
-        public void Boid_ForEach(Action<BoidEntity> onAction) {
-            boidRepo.ForEach(onAction);
+        // Block
+        public void Block_ForEach(Action<BlockEntity> onAction) {
+            blockRepo.ForEach(onAction);
         }
 
     }

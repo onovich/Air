@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Air {
+namespace Leap {
 
     public static class CommonExtension {
 
@@ -19,6 +19,11 @@ namespace Air {
         public static Vector3Int RoundToVector3Int(this Vector3 vector3) {
             var vector3Int = new Vector3Int(Mathf.RoundToInt(vector3.x), Mathf.RoundToInt(vector3.y), Mathf.RoundToInt(vector3.z));
             return vector3Int;
+        }
+
+        public static Vector2Int RoundToVector2Int(this Vector3 vector3) {
+            var vector2Int = new Vector2Int(Mathf.RoundToInt(vector3.x), Mathf.RoundToInt(vector3.y));
+            return vector2Int;
         }
 
         public static Vector2Int RoundToVector2Int(this Vector2 vector2) {

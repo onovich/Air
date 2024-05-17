@@ -1,5 +1,14 @@
 {
   "dependencies": {
+    "com.codewriter.triinspector": {
+      "version": "git@github.com:codewriter-packages/Tri-Inspector.git",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {
+        "com.unity.localization": "1.0.0"
+      },
+      "hash": "57e726cc4f2c8d3488011f312d5b22dab2b19dc5"
+    },
     "com.gamearki.gamefunctions": {
       "version": "ssh://git@github.com/GameArki/GameFunctions.git?path=Assets",
       "depth": 0,
@@ -13,6 +22,27 @@
       "source": "git",
       "dependencies": {},
       "hash": "d28429bcf558304d11a6f7a38300db9b76cb524e"
+    },
+    "com.mortise.swing": {
+      "version": "ssh://git@github.com/onovich/Swing.git?path=/Assets/com.mortise.swing#unity-edition",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {},
+      "hash": "28e16b6f750137587b7527e6832b8d9bb2dac059"
+    },
+    "com.tenon.prism": {
+      "version": "ssh://git@github.com/onovich/Prism.git?path=/Assets/com.tenon.prism#main",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {},
+      "hash": "a0a83b78f4e6257dc7435583eb4b624238e36cc7"
+    },
+    "com.tenon.vista.camera2d": {
+      "version": "ssh://git@github.com/onovich/Vista.git?path=/Assets/com.tenon.vista.camera2d#main",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {},
+      "hash": "2d89d2157b9383abbee1823f91f593d09f1140d5"
     },
     "com.unity.2d.animation": {
       "version": "9.0.4",
@@ -109,11 +139,11 @@
       "url": "https://packages.unity.cn"
     },
     "com.unity.addressables": {
-      "version": "1.21.19",
+      "version": "1.21.20",
       "depth": 0,
       "source": "registry",
       "dependencies": {
-        "com.unity.scriptablebuildpipeline": "1.21.21",
+        "com.unity.scriptablebuildpipeline": "1.21.22",
         "com.unity.modules.assetbundle": "1.0.0",
         "com.unity.modules.imageconversion": "1.0.0",
         "com.unity.modules.jsonserialize": "1.0.0",
@@ -133,7 +163,7 @@
     },
     "com.unity.burst": {
       "version": "1.8.9",
-      "depth": 3,
+      "depth": 1,
       "source": "registry",
       "dependencies": {
         "com.unity.mathematics": "1.2.1"
@@ -204,28 +234,74 @@
       "dependencies": {},
       "url": "https://packages.unity.cn"
     },
-    "com.unity.inputsystem": {
-      "version": "1.7.0",
-      "depth": 0,
+    "com.unity.localization": {
+      "version": "1.4.4",
+      "depth": 1,
       "source": "registry",
       "dependencies": {
-        "com.unity.modules.uielements": "1.0.0"
+        "com.unity.addressables": "1.21.8",
+        "com.unity.nuget.newtonsoft-json": "3.0.2"
       },
       "url": "https://packages.unity.cn"
     },
     "com.unity.mathematics": {
       "version": "1.2.6",
+      "depth": 1,
+      "source": "registry",
+      "dependencies": {},
+      "url": "https://packages.unity.cn"
+    },
+    "com.unity.nuget.newtonsoft-json": {
+      "version": "3.2.1",
       "depth": 2,
       "source": "registry",
       "dependencies": {},
       "url": "https://packages.unity.cn"
     },
+    "com.unity.render-pipelines.core": {
+      "version": "14.0.9",
+      "depth": 1,
+      "source": "builtin",
+      "dependencies": {
+        "com.unity.ugui": "1.0.0",
+        "com.unity.modules.physics": "1.0.0",
+        "com.unity.modules.terrain": "1.0.0",
+        "com.unity.modules.jsonserialize": "1.0.0"
+      }
+    },
+    "com.unity.render-pipelines.universal": {
+      "version": "14.0.9",
+      "depth": 0,
+      "source": "builtin",
+      "dependencies": {
+        "com.unity.mathematics": "1.2.1",
+        "com.unity.burst": "1.8.9",
+        "com.unity.render-pipelines.core": "14.0.9",
+        "com.unity.shadergraph": "14.0.9"
+      }
+    },
     "com.unity.scriptablebuildpipeline": {
-      "version": "1.21.21",
+      "version": "1.21.22",
       "depth": 1,
       "source": "registry",
       "dependencies": {},
       "url": "https://packages.unity.cn"
+    },
+    "com.unity.searcher": {
+      "version": "4.9.2",
+      "depth": 2,
+      "source": "registry",
+      "dependencies": {},
+      "url": "https://packages.unity.cn"
+    },
+    "com.unity.shadergraph": {
+      "version": "14.0.9",
+      "depth": 1,
+      "source": "builtin",
+      "dependencies": {
+        "com.unity.render-pipelines.core": "14.0.9",
+        "com.unity.searcher": "4.9.2"
+      }
     },
     "com.unity.test-framework": {
       "version": "1.1.33",

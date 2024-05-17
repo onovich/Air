@@ -1,8 +1,8 @@
-namespace Air {
+namespace Leap {
 
     public class PlayerEntity {
 
-        public int ownerBoidEntityID;
+        public int ownerRoleEntityID;
 
     }
 

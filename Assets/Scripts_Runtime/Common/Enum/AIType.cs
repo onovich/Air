@@ -1,10 +1,10 @@
-namespace Air {
+namespace Leap {
 
     public enum AIType {
 
         None = 0,
         Pathing = 1,
-        DrivenByBoids = 2,
+        DrivenByRoles = 2,
     }
 
 }
