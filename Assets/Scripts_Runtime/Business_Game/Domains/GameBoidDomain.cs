@@ -54,23 +54,23 @@ namespace Air {
             }
 
             var boidLen = ctx.boidRepo.TryGetAround(boid.entityID, allyStatus, posInt, 4, 10, out var boids);
-            if (boidLen == 0) {
-                acceleration = boid.velocity;
-                ApplyMove(ctx, boid, acceleration, boidTM.minSpeed, boidTM.maxSpeed, fixdt, true);
-                return;
-            }
+            // if (boidLen == 0) {
+            //     acceleration = boid.velocity;
+            //     ApplyMove(ctx, boid, acceleration, boidTM.minSpeed, boidTM.maxSpeed, fixdt, true);
+            //     return;
+            // }
 
-            var separation = SteerTowards(ctx, Boid_GetSeparationVector(ctx, pos, boids, boidLen,
-            boidTM.separationRadius), boid) * boidTM.separationWeight;
-            acceleration += separation;
+            // var separation = SteerTowards(ctx, Boid_GetSeparationVector(ctx, pos, boids, boidLen,
+            // boidTM.separationRadius), boid) * boidTM.separationWeight;
+            // acceleration += separation;
 
-            var alignment = SteerTowards(ctx, Boid_GetAlignmentVector(ctx, pos, boids, boidLen,
-            boidTM.alignmentRadius), boid) * boidTM.alignmentWeight;
-            acceleration += alignment;
+            // var alignment = SteerTowards(ctx, Boid_GetAlignmentVector(ctx, pos, boids, boidLen,
+            // boidTM.alignmentRadius), boid) * boidTM.alignmentWeight;
+            // acceleration += alignment;
 
-            var cohesion = SteerTowards(ctx, Boid_GetCohesionVector(ctx, pos, boids, boidLen,
-            boidTM.cohesionRadius), boid) * boidTM.cohesionWeight;
-            acceleration += cohesion;
+            // var cohesion = SteerTowards(ctx, Boid_GetCohesionVector(ctx, pos, boids, boidLen,
+            // boidTM.cohesionRadius), boid) * boidTM.cohesionWeight;
+            // acceleration += cohesion;
 
             ApplyMove(ctx, boid, acceleration, boidTM.minSpeed, boidTM.maxSpeed, fixdt, false);
         }
@@ -190,27 +190,27 @@ namespace Air {
             var max = center + size / 2;
             var pos = boid.Pos;
             if (pos.x < min.x || pos.x > max.x || pos.y < min.y || pos.y > max.y) {
-                // boid.Attr_DeadlyHurt();
                 MoveToOppoSide(ctx, boid, max, min);
             }
         }
 
         static void MoveToOppoSide(GameBusinessContext ctx, BoidEntity boid, Vector2 max, Vector2 min) {
-            Vector3 pos = Vector2.zero;
-            float x = boid.Pos.x;
-            float y = boid.Pos.y;
-            if (y >= max.y) {
-                pos.y = -max.y;
-
+            Vector3 pos = boid.Pos;
+            if (pos.y >= max.y) {
+                var offset = pos.y - max.y;
+                pos.y = min.y + offset;
             }
-            if (y <= min.y) {
-                pos.y = max.y;
+            if (pos.y <= min.y) {
+                var offset = min.y - pos.y;
+                pos.y = max.y - offset;
             }
-            if (x >= max.x) {
-                pos.x = min.x;
+            if (pos.x >= max.x) {
+                var offset = pos.x - max.x;
+                pos.x = min.x + offset;
             }
-            if (x <= min.x) {
-                pos.x = max.x;
+            if (pos.x <= min.x) {
+                var offset = min.x - pos.x;
+                pos.x = max.x - offset;
             }
             boid.Pos_SetPos(pos);
         }
