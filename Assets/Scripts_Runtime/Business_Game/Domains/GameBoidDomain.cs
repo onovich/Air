@@ -48,7 +48,7 @@ namespace Air {
             var allyStatus = boid.allyStatus;
             var acceleration = Vector2.zero;
 
-            var boidLen = ctx.boidRepo.TryGetAround(boid.entityID, allyStatus, posInt, 10, 10, out var boids);
+            var boidLen = ctx.boidRepo.TryGetAround(boid.entityID, allyStatus, posInt, 4, 10, out var boids);
 
             var has = ctx.templateInfraContext.Boid_TryGet(boid.typeID, out var boidTM);
             if (!has) {
@@ -68,7 +68,7 @@ namespace Air {
             acceleration += cohesion;
 
             var velocity = boid.velocity;
-            velocity += acceleration * Time.deltaTime;
+            velocity += acceleration * fixdt;
 
             float speed = velocity.magnitude;
             Vector3 dir = velocity / speed;
@@ -76,7 +76,7 @@ namespace Air {
             velocity = dir * speed;
             boid.Velocity_Set(velocity);
 
-            pos += velocity * Time.deltaTime;
+            pos += velocity * fixdt;
             boid.Move_SetUp(dir);
             var oldPos = boid.Pos;
             boid.Pos_SetPos(pos);
@@ -106,10 +106,10 @@ namespace Air {
                 if (sqrDst >= radius * radius) {
                     continue;
                 }
-                if (sqrDst < 0.01f) {
-                    // separation -= ctx.randomService.InsideUnitCircle();
-                    continue;
-                }
+                // if (sqrDst < 0.01f) {
+                //     // separation -= ctx.randomService.InsideUnitCircle();
+                //     continue;
+                // }
                 separation -= offset / sqrDst;
             }
             return separation.normalized;
@@ -129,9 +129,9 @@ namespace Air {
                     continue;
                 }
 
-                if (sqrDst < 0.01f) {
-                    continue;
-                }
+                // if (sqrDst < 0.01f) {
+                //     continue;
+                // }
                 var dir = other.velocity;
                 alignment += dir;
             }
@@ -152,9 +152,9 @@ namespace Air {
                     continue;
                 }
 
-                if (sqrDst < 0.01f) {
-                    continue;
-                }
+                // if (sqrDst < 0.01f) {
+                //     continue;
+                // }
 
                 var otherPos = other.Pos;
                 cohesion += otherPos;

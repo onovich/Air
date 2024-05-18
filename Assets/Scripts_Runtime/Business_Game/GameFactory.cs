@@ -92,6 +92,10 @@ namespace Air {
             // Set Pos
             boid.Pos_SetPos(pos);
 
+            // Set Velocity
+            float speed = (boidTM.minSpeed + boidTM.maxSpeed) / 2;
+            boid.Velocity_Set(boid.transform.forward * speed);
+
             // Set Mesh
             boid.Mesh_Set(boidTM.mesh);
 
