@@ -48,11 +48,16 @@ namespace Air {
             var allyStatus = boid.allyStatus;
             var acceleration = Vector2.zero;
 
-            var boidLen = ctx.boidRepo.TryGetAround(boid.entityID, allyStatus, posInt, 4, 10, out var boids);
-
             var has = ctx.templateInfraContext.Boid_TryGet(boid.typeID, out var boidTM);
             if (!has) {
                 GLog.LogError("Boid_Move: boidTM not found: " + boid.typeID);
+            }
+
+            var boidLen = ctx.boidRepo.TryGetAround(boid.entityID, allyStatus, posInt, 4, 10, out var boids);
+            if (boidLen == 0) {
+                acceleration = boid.velocity;
+                ApplyMove(ctx, boid, acceleration, boidTM.minSpeed, boidTM.maxSpeed, fixdt);
+                return;
             }
 
             var separation = SteerTowards(ctx, Boid_GetSeparationVector(ctx, pos, boids, boidLen,
@@ -67,17 +72,23 @@ namespace Air {
             boidTM.cohesionRadius), boid) * boidTM.cohesionWeight;
             acceleration += cohesion;
 
+            ApplyMove(ctx, boid, acceleration, boidTM.minSpeed, boidTM.maxSpeed, fixdt);
+        }
+
+        static void ApplyMove(GameBusinessContext ctx, BoidEntity boid, Vector2 acceleration, float minSpeed, float maxSpeed, float fixdt) {
             var velocity = boid.velocity;
             velocity += acceleration * fixdt;
 
             float speed = velocity.magnitude;
             Vector3 dir = velocity / speed;
-            speed = Mathf.Clamp(speed, boidTM.minSpeed, boidTM.maxSpeed);
+            speed = Mathf.Clamp(speed, minSpeed, maxSpeed);
             velocity = dir * speed;
             boid.Velocity_Set(velocity);
 
+            var pos = boid.Pos;
             pos += velocity * fixdt;
             boid.Move_SetUp(dir);
+
             var oldPos = boid.Pos;
             boid.Pos_SetPos(pos);
             ctx.boidRepo.UpdatePos(boid, oldPos);

@@ -34,7 +34,6 @@ namespace Air {
         // Pos
         public Vector2 Pos => transform.position;
         public Vector2Int GridPos => new Vector2Int((int)Pos.x, (int)Pos.y);
-        public Vector2 Dir => transform.forward;
 
         // TearDown
         public bool needTearDown;
