@@ -27,6 +27,7 @@ namespace Air {
 
         // Service
         public IDRecordService idRecordService;
+        public RandomService randomService;
 
         // Infra
         public TemplateInfraContext templateInfraContext;
@@ -45,6 +46,7 @@ namespace Air {
             gameEntity = new GameEntity();
             playerEntity = new PlayerEntity();
             idRecordService = new IDRecordService();
+            randomService = new RandomService();
             boidRepo = new BoidRepository();
             blockRepo = new BlockRepository();
             spikeRepo = new SpikeRepository();

@@ -36,8 +36,104 @@ namespace Air {
             boid.TearDown();
         }
 
-        public static void ApplyMove(GameBusinessContext ctx, BoidEntity Boid, float dt) {
-            Boid.Move_ApplyMove(dt);
+        public static void ApplyMove(GameBusinessContext ctx, BoidEntity boid, float dt) {
+            Boid_Move(ctx, boid, dt);
+        }
+
+        // Boids AI
+        public static void Boid_Move(GameBusinessContext ctx, BoidEntity boid, float fixdt) {
+
+            var pos = boid.Pos;
+            var posInt = boid.GridPos;
+            var allyStatus = boid.allyStatus;
+
+            var boidLen = ctx.boidRepo.TryGetAround(boid.entityID, allyStatus, posInt, 10, 10, out var boids);
+            if (boidLen <= 1) {
+                // TODO: Wandering
+                return;
+            }
+
+            var separation = Boid_GetSeparationVector(ctx, pos, boids, boidLen, 0.9f) * 10;
+            var dir = separation;
+
+            if (dir.sqrMagnitude < 0.01f) {
+                dir = ctx.randomService.InsideUnitCircle();
+            } else {
+                dir = dir.normalized;
+            }
+            boid.inputCom.moveAxis = dir;
+
+            // Move
+            var oldPos = boid.Pos;
+            boid.Move_ApplyMove(fixdt);
+            ctx.boidRepo.UpdatePos(boid, oldPos);
+
+        }
+
+        static Vector2 Boid_GetSeparationVector(GameBusinessContext ctx, Vector2 boidPos, BoidEntity[] boids, int boidLen, float radius) {
+
+
+            var separation = Vector2.zero;
+
+            if (boidLen == 0) {
+                return separation;
+            }
+
+            for (int i = 0; i < boidLen; i += 1) {
+                var other = boids[i];
+                var otherPos = other.Pos;
+                var dir = boidPos - otherPos;
+                var sqrDist = dir.sqrMagnitude;
+                if (sqrDist >= radius * radius) {
+                    continue;
+                }
+                if (sqrDist < 0.01f) {
+                    dir = ctx.randomService.InsideUnitCircle();
+                } else {
+                    dir = dir.normalized;
+                }
+                separation += dir * (1f / sqrDist);
+            }
+
+            return separation.normalized;
+        }
+
+        static Vector2 Boid_GetAlignmentVector(GameBusinessContext ctx, Vector2 boidPos, BoidEntity[] boids, int boidLen, float radius) {
+
+            var alignment = Vector2.zero;
+
+            if (boidLen == 0) {
+                return alignment;
+            }
+
+            for (int i = 0; i < boidLen; i += 1) {
+                var other = boids[i];
+                var otherPos = other.Pos;
+                var dir = other.velocity;
+                alignment += dir;
+            }
+
+            return alignment.normalized;
+        }
+
+        static Vector2 Boid_GetCohesionVector(GameBusinessContext ctx, Vector2 boidPos, BoidEntity[] boids, int boidLen, float radius) {
+
+            var cohesion = Vector2.zero;
+
+            if (boidLen == 0) {
+                return cohesion;
+            }
+
+            for (int i = 0; i < boidLen; i += 1) {
+                var other = boids[i];
+                var otherPos = other.Pos;
+                cohesion += otherPos;
+            }
+
+            cohesion = cohesion / boidLen;
+            var dir = cohesion - boidPos;
+
+            return dir.normalized;
         }
 
         public static void ApplyConstraint(GameBusinessContext ctx, BoidEntity Boid, float dt) {

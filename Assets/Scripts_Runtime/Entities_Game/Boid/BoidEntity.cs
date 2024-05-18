@@ -35,6 +35,7 @@ namespace Air {
 
         // Pos
         public Vector2 Pos => Pos_GetPos();
+        public Vector2Int GridPos => new Vector2Int((int)Pos.x, (int)Pos.y);
 
         // TearDown
         public bool needTearDown;
@@ -66,17 +67,23 @@ namespace Air {
             hp = 0;
         }
 
+        public bool IsDead() {
+            return hp <= 0 || needTearDown || fsmCom.status == BoidFSMStatus.Dead;
+        }
+
         // Move
         public void Move_ApplyMove(float dt) {
-            Move_Apply(inputCom.moveAxis.x, Attr_GetMoveSpeed(), dt);
+            Move_Apply(inputCom.moveAxis, Attr_GetMoveSpeed(), dt);
         }
 
         public void Move_Stop() {
-            Move_Apply(0, 0, 0);
+            Move_Apply(Vector2.zero, 0, 0);
         }
 
-        void Move_Apply(float xAxis, float moveSpeed, float fixdt) {
-            velocity.x = xAxis * moveSpeed;
+        void Move_Apply(Vector2 axis, float moveSpeed, float fixdt) {
+            velocity.x = axis.x * moveSpeed;
+            velocity.y = axis.y * moveSpeed;
+            this.transform.position += (Vector3)velocity * fixdt;
         }
 
         // FSM
