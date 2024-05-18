@@ -16,16 +16,27 @@ MonoBehaviour:
   mapSize: {x: 40, y: 24}
   mapPos: {x: 0, y: -2}
   SpawnPoint: {x: -3, y: -2}
-  boidSpawnArr: []
-  boidSpawnPosArr: []
-  boidSpawnIndexArr: 
+  boidSpawnArr:
+  - {fileID: 11400000, guid: b74c6ea0c63d24141bc55dc25267ba3e, type: 2}
+  - {fileID: 11400000, guid: b74c6ea0c63d24141bc55dc25267ba3e, type: 2}
+  - {fileID: 11400000, guid: b74c6ea0c63d24141bc55dc25267ba3e, type: 2}
+  - {fileID: 11400000, guid: b74c6ea0c63d24141bc55dc25267ba3e, type: 2}
+  - {fileID: 11400000, guid: b74c6ea0c63d24141bc55dc25267ba3e, type: 2}
+  boidSpawnPosArr:
+  - {x: 0, y: 0}
+  - {x: -3.92, y: 1.13}
+  - {x: -6.92, y: -1.23}
+  - {x: -5.26, y: -5.04}
+  - {x: -1.24, y: -4.12}
+  boidSpawnAllyStatusArr: 0100000001000000010000000100000001000000
   blockSpawnArr: []
   blockSpawnPosArr: []
   blockSpawnSizeArr: []
-  blockSpawnIndexArr: 
   spikeSpawnArr: []
   spikeSpawnPosArr: []
   spikeSpawnSizeArr: []
-  spikeSpawnIndexArr: 
+  leaderSpawnArr: []
+  leaderSpawnPosArr: []
+  leaderSpawnAllyStatusArr: 
   cameraConfinerWorldMax: {x: 30, y: 20}
   cameraConfinerWorldMin: {x: -30, y: -20}

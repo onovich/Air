@@ -23,6 +23,7 @@ namespace Air.Modifier {
         [Button("Bake")]
         void Bake() {
             BakeMapInfo();
+            BakeLeader();
             BakeBlock();
             BakeSpike();
             BakeBoid();
@@ -88,11 +89,15 @@ namespace Air.Modifier {
                 var pos = editor.GetPos();
                 leaderSpawnPosList.Add(pos);
 
+                var allyStatus = editor.GetAllyStatus();
+                leaderAllyStatusList.Add(allyStatus);
+
                 editor.index = i;
                 editor.Rename();
             }
             mapTM.leaderSpawnArr = leaderTMList.ToArray();
             mapTM.leaderSpawnPosArr = leaderSpawnPosList.ToArray();
+            mapTM.leaderSpawnAllyStatusArr = leaderAllyStatusList.ToArray();
         }
 
         void BakeBoid() {
@@ -112,11 +117,15 @@ namespace Air.Modifier {
                 var pos = editor.GetPos();
                 boidSpawnPosList.Add(pos);
 
+                var allyStatus = editor.GetAllyStatus();
+                boidAllyStatusList.Add(allyStatus);
+
                 editor.index = i;
                 editor.Rename();
             }
             mapTM.boidSpawnArr = boidTMList.ToArray();
             mapTM.boidSpawnPosArr = boidSpawnPosList.ToArray();
+            mapTM.boidSpawnAllyStatusArr = boidAllyStatusList.ToArray();
         }
 
         void BakeBlock() {
