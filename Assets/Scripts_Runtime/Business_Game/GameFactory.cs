@@ -103,6 +103,8 @@ namespace Air {
 
             // Set Mesh
             boid.Mesh_Set(boidTM.mesh);
+            var color = randomService.Color();
+            boid.Mesh_SetColor(color);
 
             // Set FSM
             boid.FSM_EnterIdle();

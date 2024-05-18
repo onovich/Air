@@ -24,6 +24,12 @@ namespace Air {
                                Mathf.Cos((float)random.NextDouble() * 2 * Mathf.PI));
         }
 
+        public Color Color() {
+            return new Color((float)random.NextDouble(),
+                             (float)random.NextDouble(),
+                             (float)random.NextDouble());
+        }
+
     }
 
 }

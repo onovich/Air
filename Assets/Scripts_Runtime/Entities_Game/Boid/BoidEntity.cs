@@ -97,6 +97,10 @@ namespace Air {
             this.spr.sprite = sp;
         }
 
+        public void Mesh_SetColor(Color color) {
+            this.spr.color = color;
+        }
+
         public void TearDown() {
             Destroy(this.gameObject);
         }
