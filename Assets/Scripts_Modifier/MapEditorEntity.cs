@@ -12,8 +12,6 @@ namespace Air.Modifier {
         [SerializeField] int typeID;
         [SerializeField] GameObject mapSize;
         [SerializeField] MapTM mapTM;
-        [SerializeField] Tilemap tilemap_terrain;
-        [SerializeField] TileBase tilebase_terrain;
         [SerializeField] Transform blockGroup;
         [SerializeField] Transform spikeGroup;
         [SerializeField] Transform spawnPointGroup;
@@ -38,7 +36,6 @@ namespace Air.Modifier {
 
         void BakeMapInfo() {
             mapTM.typeID = typeID;
-            mapTM.tileBase_terrain = tilebase_terrain;
             mapTM.mapSize = mapSize.transform.localScale;
             mapTM.mapPos = mapSize.transform.localPosition;
             mapSize.transform.localScale = mapTM.mapSize;

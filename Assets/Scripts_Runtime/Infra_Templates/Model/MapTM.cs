@@ -11,7 +11,6 @@ namespace Air {
 
         public Vector2 mapSize;
         public Vector2 mapPos;
-        public TileBase tileBase_terrain;
 
         // Boid Spawn 
         public Vector2 SpawnPoint;

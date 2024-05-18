@@ -19,7 +19,6 @@ namespace Air {
             map.typeID = typeID;
             map.mapSize = mapTM.mapSize;
             map.mapOffset = mapTM.mapPos;
-            map.tileBase_terrain = mapTM.tileBase_terrain;
 
             return map;
         }

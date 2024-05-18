@@ -10,7 +10,6 @@ namespace Air {
         public int typeID;
         public Vector3 mapSize;
         public Vector3 mapOffset;
-        public TileBase tileBase_terrain;
 
         public Dictionary<Vector2, int> terrainTypeIDDict;
 
