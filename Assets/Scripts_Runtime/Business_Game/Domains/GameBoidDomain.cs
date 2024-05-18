@@ -54,16 +54,28 @@ namespace Air {
                 goto moveto;
             }
 
+            var has = ctx.templateInfraContext.Boid_TryGet(boid.typeID, out var boidTM);
+            if (!has) {
+                GLog.LogError("Boid_Move: boidTM not found: " + boid.typeID);
+            }
+
+            var separationRadius = boidTM.separationRadius;
+            var separationWeight = boidTM.separationWeight;
+            var alignmentRadius = boidTM.alignmentRadius;
+            var alignmentWeight = boidTM.alignmentWeight;
+            var cohesionRadius = boidTM.cohesionRadius;
+            var cohesionWeight = boidTM.cohesionWeight;
+
             var separation = Boid_GetSeparationVector(ctx, pos, boids, boidLen,
-            boid.separationRadius) * boid.separationWeight;
-            dir += separation;
+            separationRadius) * separationWeight;
+            dir = separation;
 
             var alignment = Boid_GetAlignmentVector(ctx, pos, boids, boidLen,
-            boid.alignmentRadius) * boid.alignmentWeight;
+            alignmentRadius) * alignmentWeight;
             dir += alignment;
 
             var cohesion = Boid_GetCohesionVector(ctx, pos, boids, boidLen,
-            boid.cohesionRadius) * boid.cohesionWeight;
+            cohesionRadius) * cohesionWeight;
             dir += cohesion;
 
             if (dir.sqrMagnitude < 0.01f) {
@@ -71,10 +83,10 @@ namespace Air {
             } else {
                 dir = dir.normalized;
             }
-            boid.inputCom.moveAxis = dir;
 
         // Move
         moveto:
+            boid.inputCom.moveAxis = dir;
             var oldPos = boid.Pos;
             boid.Move_ApplyMove(fixdt);
             ctx.boidRepo.UpdatePos(boid, oldPos);

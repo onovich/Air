@@ -16,13 +16,6 @@ namespace Air {
         public int hp;
         public int hpMax;
 
-        public float separationWeight;
-        public float separationRadius;
-        public float alignmentWeight;
-        public float alignmentRadius;
-        public float cohesionWeight;
-        public float cohesionRadius;
-
         // Physics
         public Vector2 velocity;
 
