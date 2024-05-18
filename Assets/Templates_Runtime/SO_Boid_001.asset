@@ -15,8 +15,8 @@ MonoBehaviour:
   typeID: 1
   hpMax: 1
   maxSteerForce: 8
-  maxSpeed: 10
-  minSpeed: 1
+  maxSpeed: 16
+  minSpeed: 8
   separationWeight: 2
   separationRadius: 2.5
   alignmentWeight: 1

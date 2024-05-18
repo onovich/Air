@@ -56,7 +56,7 @@ namespace Air {
             var boidLen = ctx.boidRepo.TryGetAround(boid.entityID, allyStatus, posInt, 4, 10, out var boids);
             if (boidLen == 0) {
                 acceleration = boid.velocity;
-                ApplyMove(ctx, boid, acceleration, boidTM.minSpeed, boidTM.maxSpeed, fixdt);
+                ApplyMove(ctx, boid, acceleration, boidTM.minSpeed, boidTM.maxSpeed, fixdt, true);
                 return;
             }
 
@@ -72,10 +72,10 @@ namespace Air {
             boidTM.cohesionRadius), boid) * boidTM.cohesionWeight;
             acceleration += cohesion;
 
-            ApplyMove(ctx, boid, acceleration, boidTM.minSpeed, boidTM.maxSpeed, fixdt);
+            ApplyMove(ctx, boid, acceleration, boidTM.minSpeed, boidTM.maxSpeed, fixdt, false);
         }
 
-        static void ApplyMove(GameBusinessContext ctx, BoidEntity boid, Vector2 acceleration, float minSpeed, float maxSpeed, float fixdt) {
+        static void ApplyMove(GameBusinessContext ctx, BoidEntity boid, Vector2 acceleration, float minSpeed, float maxSpeed, float fixdt, bool hasNoBoids) {
             var velocity = boid.velocity;
             velocity += acceleration * fixdt;
 
@@ -88,6 +88,11 @@ namespace Air {
             var pos = boid.Pos;
             pos += velocity * fixdt;
             boid.Move_SetUp(dir);
+
+            if (hasNoBoids && speed < minSpeed) {
+                Debug.Log("No Boids: Speed =" + speed);
+                return;
+            }
 
             var oldPos = boid.Pos;
             boid.Pos_SetPos(pos);
@@ -117,10 +122,10 @@ namespace Air {
                 if (sqrDst >= radius * radius) {
                     continue;
                 }
-                // if (sqrDst < 0.01f) {
-                //     // separation -= ctx.randomService.InsideUnitCircle();
-                //     continue;
-                // }
+                if (sqrDst < 0.01f) {
+                    separation -= ctx.randomService.InsideUnitCircle();
+                    continue;
+                }
                 separation -= offset / sqrDst;
             }
             return separation.normalized;
@@ -140,9 +145,9 @@ namespace Air {
                     continue;
                 }
 
-                // if (sqrDst < 0.01f) {
-                //     continue;
-                // }
+                if (sqrDst < 0.01f) {
+                    continue;
+                }
                 var dir = other.velocity;
                 alignment += dir;
             }
@@ -154,6 +159,7 @@ namespace Air {
             if (boidLen == 0) {
                 return cohesion;
             }
+            var num = 0;
             for (int i = 0; i < boidLen; i += 1) {
                 var other = boids[i];
                 var offset = other.Pos - boidPos;
@@ -163,14 +169,15 @@ namespace Air {
                     continue;
                 }
 
-                // if (sqrDst < 0.01f) {
-                //     continue;
-                // }
+                if (sqrDst < 0.01f) {
+                    continue;
+                }
 
                 var otherPos = other.Pos;
                 cohesion += otherPos;
+                num += 1;
             }
-            cohesion = cohesion / boidLen;
+            cohesion = cohesion / num;
             var dir = cohesion - boidPos;
             return dir.normalized;
         }

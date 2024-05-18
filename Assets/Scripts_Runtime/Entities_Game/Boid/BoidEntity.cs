@@ -71,21 +71,6 @@ namespace Air {
             this.transform.up = dir;
         }
 
-        void Move_Apply(Vector2 axis, float moveSpeed, float fixdt) {
-            if (axis != Vector2.zero) {
-                velocity.x = axis.x * moveSpeed;
-                velocity.y = axis.y * moveSpeed;
-            }
-            this.transform.position += (Vector3)velocity * fixdt;
-        }
-
-        public void Move_UpdateRotation() {
-            if (velocity.sqrMagnitude > 0.01f) {
-                float angle = Mathf.Atan2(velocity.y, velocity.x) * Mathf.Rad2Deg;
-                transform.rotation = Quaternion.Euler(new Vector3(0, 0, angle));
-            }
-        }
-
         // FSM
         public BoidFSMStatus FSM_GetStatus() {
             return fsmCom.status;
