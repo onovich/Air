@@ -4,10 +4,12 @@ using UnityEngine;
 namespace Air {
 
 	public static class FPSHelper {
-		static float t = 0.0f;
+		static float T = 0.0f;
+		static float DT = 0.0f;
 
 		public static void Tick(float dt) {
-			t += (dt - t) * 0.1f;
+			T += (dt - T) * 0.1f;
+			DT = dt;
 		}
 
 		public static void OnGUI() {
@@ -17,8 +19,8 @@ namespace Air {
 			style.alignment = TextAnchor.UpperLeft;
 			style.fontSize = h * 2 / 100;
 			style.normal.textColor = Color.white;
-			float msec = t * 1000.0f;
-			float fps = 1.0f / t;
+			float msec = DT * 1000.0f;
+			float fps = 1.0f / T;
 			string text = string.Format("{0:0.0} ms ({1:0.} fps)", msec, fps);
 			GUI.Label(rect, text, style);
 		}
