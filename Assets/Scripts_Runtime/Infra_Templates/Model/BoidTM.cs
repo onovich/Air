@@ -16,11 +16,20 @@ namespace Air {
         public float minSpeed;
 
         [Header("Boids AI Weight")]
+        [Header("分离")]
         public float separationWeight;
-        public float separationRadius;
+        [Header("对齐")]
         public float alignmentWeight;
-        public float alignmentRadius;
+
+        [Header("聚集")]
         public float cohesionWeight;
+
+        [Header("Boids AI Radius")]
+        [Header("分离")]
+        public float separationRadius;
+        [Header("对齐")]
+        public float alignmentRadius;
+        [Header("聚集")]
         public float cohesionRadius;
 
         [Header("Render")]

@@ -41,11 +41,11 @@ namespace Air {
         // CS
         public static void ProcessCS(GameBusinessContext ctx, int typeID, float dt) {
             var boidLen = ctx.boidRepo.TakeAll(out var boids);
-            var boidData = new BoidData[boidLen];
+            var csModel = new BoidCSModel[boidLen];
 
             for (int i = 0; i < boidLen; i++) {
-                boidData[i].position = boids[i].Pos;
-                boidData[i].direction = boids[i].Up;
+                csModel[i].position = boids[i].Pos;
+                csModel[i].direction = boids[i].Up;
             }
 
             if (ctx.boidBuffer == null || ctx.boidBuffer.count != boidLen) {
@@ -53,14 +53,14 @@ namespace Air {
                     ctx.boidBuffer.Release();
                     ctx.boidBuffer = null;
                 }
-                ctx.boidBuffer = new ComputeBuffer(boidLen, BoidData.Size);
+                ctx.boidBuffer = new ComputeBuffer(boidLen, BoidCSModel.Size);
             }
 
-            if (boidData == null) {
+            if (csModel == null) {
                 return;
             }
 
-            ctx.boidBuffer.SetData(boidData, 0, 0, boidLen);
+            ctx.boidBuffer.SetData(csModel, 0, 0, boidLen);
 
             var config = ctx.templateInfraContext.Config_Get();
             var compute = config.boidCS;
@@ -72,17 +72,18 @@ namespace Air {
             }
 
             compute.SetBuffer(0, "boids", ctx.boidBuffer);
-            compute.SetInt("numBoids", boidLen);
-            compute.SetFloat("viewRadius", boidTM.alignmentRadius);
-            compute.SetFloat("avoidRadius", boidTM.separationRadius);
+            compute.SetInt("boidsCount", boidLen);
+            compute.SetFloat("alignmentRadius", boidTM.alignmentRadius);
+            compute.SetFloat("separationRadius", boidTM.separationRadius);
+            compute.SetFloat("cohesionRadius", boidTM.cohesionRadius);
 
             int threadGroupSize = 1024;
             int threadGroups = Mathf.CeilToInt(boidLen / (float)threadGroupSize);
             compute.Dispatch(0, threadGroups, 1, 1);
 
-            ctx.boidBuffer.GetData(boidData, 0, 0, boidLen);
+            ctx.boidBuffer.GetData(csModel, 0, 0, boidLen);
             for (int i = 0; i < boidLen; i++) {
-                boids[i].boidData = boidData[i];
+                boids[i].boidData = csModel[i];
             }
         }
 
@@ -94,7 +95,7 @@ namespace Air {
             var boidData = boid.boidData;
             var alignment = boidData.alignment;
             var separation = boidData.separation;
-            var otherNum = boidData.otherCount;
+            var otherNum = boidData.cohesionCount;
             var center = boidData.cohesionCenter;
             var cohesion = otherNum > 0 ? center / otherNum - boid.Pos : Vector3.zero;
 

@@ -8,33 +8,36 @@ struct Boid {
     float3 alignment;
     float3 cohesionCenter;
     float3 separation;
-    int otherCount;
+
+    int cohesionCount;
 };
 
 RWStructuredBuffer<Boid> boids;
-uint numBoids;
-float viewRadius;
-float avoidRadius;
+uint boidsCount;
+float alignmentRadius;
+float separationRadius;
+float cohesionRadius;
 
 [numthreads(threadGroupSize,1,1)]
 void CSMain (uint3 id : SV_DispatchThreadID) {
     uint indexA = id.x;
 
-    for (uint indexB = 0; indexB < numBoids; indexB++) {
+    for (uint indexB = 0; indexB < boidsCount; indexB++) {
         if (indexA != indexB) {
             Boid boidA = boids[indexA];
             Boid boidB = boids[indexB];
             float3 offset = boidB.position - boidA.position;
             float sqrDst = offset.x * offset.x + offset.y * offset.y; 
 
-            if (sqrDst < viewRadius * viewRadius) {
-                boids[indexA].otherCount += 1;
+            if (sqrDst < alignmentRadius * alignmentRadius) {
                 boids[indexA].alignment += boidB.direction;
+            }
+            if(sqrDst < cohesionRadius * cohesionRadius) {
+                boids[indexA].cohesionCount += 1;
                 boids[indexA].cohesionCenter += boidB.position;
-
-                if (sqrDst < avoidRadius * avoidRadius) {
-                    boids[indexA].separation -= offset / sqrt(sqrDst);
-                }
+            }
+            if (sqrDst < separationRadius * separationRadius) {
+                boids[indexA].separation -= offset / sqrt(sqrDst);
             }
         }
     }
