@@ -55,13 +55,6 @@ namespace Air {
             var status = game.fsmComponent.status;
             if (status == GameStatus.Gaming) {
 
-                // Boids
-                var boidLen = ctx.boidRepo.TakeAll(out var boidArr);
-                for (int i = 0; i < boidLen; i++) {
-                    var boid = boidArr[i];
-                    GameBoidDomain.CheckAndUnSpawn(ctx, boid);
-                }
-
                 // Result
                 GameGameDomain.ApplyGameResult(ctx);
             }
@@ -70,7 +63,7 @@ namespace Air {
             }
         }
 
-        static void FixedTick(GameBusinessContext ctx, float fixdt) {
+        static void FixedTick(GameBusinessContext ctx, float dt) {
 
             var game = ctx.gameEntity;
             var status = game.fsmComponent.status;
@@ -80,10 +73,10 @@ namespace Air {
                 var boidLen = ctx.boidRepo.TakeAll(out var boidArr);
                 for (int i = 0; i < boidLen; i++) {
                     var boid = boidArr[i];
-                    GameBoidFSMController.FixedTickFSM(ctx, boid, fixdt);
+                    GameBoidFSMController.TickFSM(ctx, boid, dt);
                 }
 
-                Physics2D.Simulate(fixdt);
+                Physics2D.Simulate(dt);
 
                 // Raycast
 
@@ -97,6 +90,13 @@ namespace Air {
             var status = game.fsmComponent.status;
             var owner = ctx.Leader_GetOwner();
             if (status == GameStatus.Gaming || status == GameStatus.GameOver) {
+
+                // Boids
+                var boidLen = ctx.boidRepo.TakeAll(out var boidArr);
+                for (int i = 0; i < boidLen; i++) {
+                    var boid = boidArr[i];
+                    GameBoidDomain.CheckAndUnSpawn(ctx, boid);
+                }
 
                 // Camera
                 CameraApp.LateTick(ctx.cameraContext, dt);

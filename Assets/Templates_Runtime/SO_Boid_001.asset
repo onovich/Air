@@ -19,11 +19,11 @@ MonoBehaviour:
   minSpeed: 8
   separationWeight: 2
   separationRadius: 2.5
-  alignmentWeight: 1
+  alignmentWeight: 1.5
   alignmentRadius: 2.5
-  cohesionWeight: 1
+  cohesionWeight: 2
   cohesionRadius: 2.5
-  mesh: {fileID: 21300000, guid: fbac374a57ef34fdcbe8cb5f1f303ab3, type: 3}
+  mesh: {fileID: 21300000, guid: 880701d384a32445393977a7c732d3ce, type: 3}
   color: {r: 1, g: 1, b: 1, a: 1}
   deadVFX: {fileID: 1046417506903995189, guid: 4cc547ee9ad754a728a343efb6c300c0, type: 3}
   deadVFXDuration: 2

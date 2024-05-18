@@ -27,6 +27,16 @@ MonoBehaviour:
   - {fileID: 11400000, guid: b74c6ea0c63d24141bc55dc25267ba3e, type: 2}
   - {fileID: 11400000, guid: b74c6ea0c63d24141bc55dc25267ba3e, type: 2}
   - {fileID: 11400000, guid: b74c6ea0c63d24141bc55dc25267ba3e, type: 2}
+  - {fileID: 11400000, guid: b74c6ea0c63d24141bc55dc25267ba3e, type: 2}
+  - {fileID: 11400000, guid: b74c6ea0c63d24141bc55dc25267ba3e, type: 2}
+  - {fileID: 11400000, guid: b74c6ea0c63d24141bc55dc25267ba3e, type: 2}
+  - {fileID: 11400000, guid: b74c6ea0c63d24141bc55dc25267ba3e, type: 2}
+  - {fileID: 11400000, guid: b74c6ea0c63d24141bc55dc25267ba3e, type: 2}
+  - {fileID: 11400000, guid: b74c6ea0c63d24141bc55dc25267ba3e, type: 2}
+  - {fileID: 11400000, guid: b74c6ea0c63d24141bc55dc25267ba3e, type: 2}
+  - {fileID: 11400000, guid: b74c6ea0c63d24141bc55dc25267ba3e, type: 2}
+  - {fileID: 11400000, guid: b74c6ea0c63d24141bc55dc25267ba3e, type: 2}
+  - {fileID: 11400000, guid: b74c6ea0c63d24141bc55dc25267ba3e, type: 2}
   boidSpawnPosArr:
   - {x: 0, y: 0}
   - {x: -0.81, y: -2.08}
@@ -38,7 +48,17 @@ MonoBehaviour:
   - {x: -6.92, y: -1.23}
   - {x: -5.26, y: -5.04}
   - {x: -1.24, y: -4.12}
-  boidSpawnAllyStatusArr: 01000000010000000100000001000000010000000100000001000000010000000100000001000000
+  - {x: -3.07, y: -6.13}
+  - {x: 1.33, y: -5.35}
+  - {x: 2.04, y: -1.36}
+  - {x: -8.58, y: -4.19}
+  - {x: -8.93, y: 0.85}
+  - {x: -9.74, y: -0.8}
+  - {x: -3.46, y: 2.94}
+  - {x: -6.49, y: 2.97}
+  - {x: 1.23, y: 1.35}
+  - {x: -0.32, y: 3.71}
+  boidSpawnAllyStatusArr: 0100000001000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
   blockSpawnArr: []
   blockSpawnPosArr: []
   blockSpawnSizeArr: []

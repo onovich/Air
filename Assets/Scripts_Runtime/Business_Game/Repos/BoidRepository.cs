@@ -10,13 +10,15 @@ namespace Air {
         Dictionary<int, BoidEntity> all;
         Dictionary<Vector2Int, List<BoidEntity>> gridDict;
 
-        BoidEntity[] temp;
+        BoidEntity[] allTemp;
+        BoidEntity[] aroundTemp;
         Vector2Int[] gridTemp;
 
         public BoidRepository() {
             all = new Dictionary<int, BoidEntity>();
             gridDict = new Dictionary<Vector2Int, List<BoidEntity>>();
-            temp = new BoidEntity[1000];
+            allTemp = new BoidEntity[1000];
+            aroundTemp = new BoidEntity[20];
             gridTemp = new Vector2Int[1000];
         }
 
@@ -32,11 +34,11 @@ namespace Air {
 
         public int TakeAll(out BoidEntity[] boids) {
             int count = all.Count;
-            if (count > temp.Length) {
-                temp = new BoidEntity[(int)(count * 1.5f)];
+            if (count > allTemp.Length) {
+                allTemp = new BoidEntity[(int)(count * 1.5f)];
             }
-            all.Values.CopyTo(temp, 0);
-            boids = temp;
+            all.Values.CopyTo(allTemp, 0);
+            boids = allTemp;
             return count;
         }
 
@@ -89,26 +91,29 @@ namespace Air {
                 if (!gridDict.TryGetValue(key, out var list)) {
                     continue;
                 }
-                list.ForEach((boid) => {
+
+                for (int j = 0; j < list.Count; j++) {
+                    var boid = list[j];
                     if (boid.allyStatus != allyStatus) {
-                        return;
+                        continue;
                     }
                     if (boid.IsDead()) {
-                        return;
+                        continue;
                     }
                     if (boid.entityID == entityID) {
-                        return;
+                        continue;
                     }
-                    temp[roleCount++] = boid;
+                    aroundTemp[roleCount++] = boid;
                     if (roleCount >= maxCount) {
-                        return;
+                        break;
                     }
-                });
+                }
+
                 if (roleCount >= maxCount) {
                     break;
                 }
             }
-            roles = temp;
+            roles = aroundTemp;
             return roleCount;
         }
 

@@ -9,6 +9,7 @@ namespace Air {
             var Boid = GameFactory.Boid_Spawn(ctx.templateInfraContext,
                                               ctx.assetsInfraContext,
                                               ctx.idRecordService,
+                                              ctx.randomService,
                                               typeID,
                                               pos,
                                               allyStatus);
@@ -54,28 +55,28 @@ namespace Air {
             }
 
             var boidLen = ctx.boidRepo.TryGetAround(boid.entityID, allyStatus, posInt, 4, 10, out var boids);
-            // if (boidLen == 0) {
-            //     acceleration = boid.velocity;
-            //     ApplyMove(ctx, boid, acceleration, boidTM.minSpeed, boidTM.maxSpeed, fixdt, true);
-            //     return;
-            // }
+            if (boidLen == 0) {
+                acceleration = boid.velocity;
+                Move(ctx, boid, acceleration, boidTM.minSpeed, boidTM.maxSpeed, fixdt, true);
+                return;
+            }
 
-            // var separation = SteerTowards(ctx, Boid_GetSeparationVector(ctx, pos, boids, boidLen,
-            // boidTM.separationRadius), boid) * boidTM.separationWeight;
-            // acceleration += separation;
+            var separation = SteerTowards(ctx, Boid_GetSeparationVector(ctx, pos, boids, boidLen,
+            boidTM.separationRadius), boid) * boidTM.separationWeight;
+            acceleration += separation;
 
-            // var alignment = SteerTowards(ctx, Boid_GetAlignmentVector(ctx, pos, boids, boidLen,
-            // boidTM.alignmentRadius), boid) * boidTM.alignmentWeight;
-            // acceleration += alignment;
+            var alignment = SteerTowards(ctx, Boid_GetAlignmentVector(ctx, pos, boids, boidLen,
+            boidTM.alignmentRadius), boid) * boidTM.alignmentWeight;
+            acceleration += alignment;
 
-            // var cohesion = SteerTowards(ctx, Boid_GetCohesionVector(ctx, pos, boids, boidLen,
-            // boidTM.cohesionRadius), boid) * boidTM.cohesionWeight;
-            // acceleration += cohesion;
+            var cohesion = SteerTowards(ctx, Boid_GetCohesionVector(ctx, pos, boids, boidLen,
+            boidTM.cohesionRadius), boid) * boidTM.cohesionWeight;
+            acceleration += cohesion;
 
-            ApplyMove(ctx, boid, acceleration, boidTM.minSpeed, boidTM.maxSpeed, fixdt, false);
+            Move(ctx, boid, acceleration, boidTM.minSpeed, boidTM.maxSpeed, fixdt, false);
         }
 
-        static void ApplyMove(GameBusinessContext ctx, BoidEntity boid, Vector2 acceleration, float minSpeed, float maxSpeed, float fixdt, bool hasNoBoids) {
+        static void Move(GameBusinessContext ctx, BoidEntity boid, Vector2 acceleration, float minSpeed, float maxSpeed, float fixdt, bool hasNoBoids) {
             var velocity = boid.velocity;
             velocity += acceleration * fixdt;
 

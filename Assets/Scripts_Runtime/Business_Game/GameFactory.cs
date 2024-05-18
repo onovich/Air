@@ -67,6 +67,7 @@ namespace Air {
         public static BoidEntity Boid_Spawn(TemplateInfraContext templateInfraContext,
                                  AssetsInfraContext assetsInfraContext,
                                  IDRecordService idRecordService,
+                                 RandomService randomService,
                                  int typeID,
                                  Vector2 pos,
                                  AllyStatus allyStatus) {
@@ -91,6 +92,10 @@ namespace Air {
 
             // Set Pos
             boid.Pos_SetPos(pos);
+
+            // Set Rotation
+            var rot = randomService.Rotation();
+            boid.transform.rotation = rot;
 
             // Set Velocity
             float speed = (boidTM.minSpeed + boidTM.maxSpeed) / 2;
