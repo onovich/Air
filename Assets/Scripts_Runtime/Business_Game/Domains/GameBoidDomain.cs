@@ -1,3 +1,4 @@
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
 namespace Air {
@@ -47,14 +48,23 @@ namespace Air {
             var posInt = boid.GridPos;
             var allyStatus = boid.allyStatus;
 
+            var dir = boid.dir;
             var boidLen = ctx.boidRepo.TryGetAround(boid.entityID, allyStatus, posInt, 10, 10, out var boids);
             if (boidLen <= 1) {
-                // TODO: Wandering
-                return;
+                goto moveto;
             }
 
-            var separation = Boid_GetSeparationVector(ctx, pos, boids, boidLen, 0.9f) * 10;
-            var dir = separation;
+            var separation = Boid_GetSeparationVector(ctx, pos, boids, boidLen,
+            boid.separationRadius) * boid.separationWeight;
+            dir += separation;
+
+            var alignment = Boid_GetAlignmentVector(ctx, pos, boids, boidLen,
+            boid.alignmentRadius) * boid.alignmentWeight;
+            dir += alignment;
+
+            var cohesion = Boid_GetCohesionVector(ctx, pos, boids, boidLen,
+            boid.cohesionRadius) * boid.cohesionWeight;
+            dir += cohesion;
 
             if (dir.sqrMagnitude < 0.01f) {
                 dir = ctx.randomService.InsideUnitCircle();
@@ -63,7 +73,8 @@ namespace Air {
             }
             boid.inputCom.moveAxis = dir;
 
-            // Move
+        // Move
+        moveto:
             var oldPos = boid.Pos;
             boid.Move_ApplyMove(fixdt);
             ctx.boidRepo.UpdatePos(boid, oldPos);
@@ -136,17 +147,37 @@ namespace Air {
             return dir.normalized;
         }
 
-        public static void ApplyConstraint(GameBusinessContext ctx, BoidEntity Boid, float dt) {
+        public static void ApplyConstraint(GameBusinessContext ctx, BoidEntity boid, float dt) {
             var map = ctx.currentMapEntity;
             var size = map.mapSize;
             var center = map.transform.position;
             var min = center - size / 2;
             var max = center + size / 2;
-            var pos = Boid.Pos;
+            var pos = boid.Pos;
             if (pos.x < min.x || pos.x > max.x || pos.y < min.y || pos.y > max.y) {
-                Boid.Attr_DeadlyHurt();
-                Debug.Log($"Dead: pos = {pos}, min = {min}, max = {max}, center = {center}, size = {size}");
+                // boid.Attr_DeadlyHurt();
+                MoveToOppoSide(ctx, boid, max, min);
             }
+        }
+
+        static void MoveToOppoSide(GameBusinessContext ctx, BoidEntity boid, Vector2 max, Vector2 min) {
+            Vector3 pos = Vector2.zero;
+            float x = boid.Pos.x;
+            float y = boid.Pos.y;
+            if (y >= max.y) {
+                pos.y = -max.y;
+
+            }
+            if (y <= min.y) {
+                pos.y = max.y;
+            }
+            if (x >= max.x) {
+                pos.x = min.x;
+            }
+            if (x <= min.x) {
+                pos.x = max.x;
+            }
+            boid.Pos_SetPos(pos);
         }
 
     }

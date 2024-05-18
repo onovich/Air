@@ -16,8 +16,11 @@ namespace Air {
 
         [Header("Move")]
         public float separationWeight;
+        public float separationRadius;
         public float alignmentWeight;
+        public float alignmentRadius;
         public float cohesionWeight;
+        public float cohesionRadius;
 
         [Header("Render")]
         public Sprite mesh;

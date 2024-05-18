@@ -16,6 +16,13 @@ namespace Air {
         public int hp;
         public int hpMax;
 
+        public float separationWeight;
+        public float separationRadius;
+        public float alignmentWeight;
+        public float alignmentRadius;
+        public float cohesionWeight;
+        public float cohesionRadius;
+
         // Physics
         public Vector2 velocity;
 
@@ -36,6 +43,7 @@ namespace Air {
         // Pos
         public Vector2 Pos => Pos_GetPos();
         public Vector2Int GridPos => new Vector2Int((int)Pos.x, (int)Pos.y);
+        public Vector2 dir;
 
         // TearDown
         public bool needTearDown;
@@ -43,6 +51,7 @@ namespace Air {
         public void Ctor() {
             fsmCom = new BoidFSMComponent();
             inputCom = new BoidInputComponent();
+            dir = Vector2.up;
         }
 
         // Pos
@@ -81,9 +90,12 @@ namespace Air {
         }
 
         void Move_Apply(Vector2 axis, float moveSpeed, float fixdt) {
-            velocity.x = axis.x * moveSpeed;
-            velocity.y = axis.y * moveSpeed;
+            if (axis != Vector2.zero) {
+                velocity.x = axis.x * moveSpeed;
+                velocity.y = axis.y * moveSpeed;
+            }
             this.transform.position += (Vector3)velocity * fixdt;
+            dir = velocity.normalized;
         }
 
         // FSM

@@ -90,6 +90,12 @@ namespace Air {
             boid.rotationSpeed = boidTM.rotationSpeed;
             boid.hp = boidTM.hpMax;
             boid.hpMax = boidTM.hpMax;
+            boid.separationWeight = boidTM.separationWeight;
+            boid.separationRadius = boidTM.separationRadius;
+            boid.alignmentWeight = boidTM.alignmentWeight;
+            boid.alignmentRadius = boidTM.alignmentRadius;
+            boid.cohesionWeight = boidTM.cohesionWeight;
+            boid.cohesionRadius = boidTM.cohesionRadius;
 
             // Set Pos
             boid.Pos_SetPos(pos);
