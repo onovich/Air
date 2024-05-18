@@ -18,7 +18,7 @@ namespace Air {
         public Vector3 velocity;
 
         // CS
-        public BoidData boidData;
+        public BoidCSModel boidData;
 
         // FSM
         public BoidFSMComponent fsmCom;
