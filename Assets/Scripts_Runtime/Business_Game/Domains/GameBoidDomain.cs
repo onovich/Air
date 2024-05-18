@@ -196,21 +196,22 @@ namespace Air {
 
         static void MoveToOppoSide(GameBusinessContext ctx, BoidEntity boid, Vector2 max, Vector2 min) {
             Vector3 pos = boid.Pos;
+            var epsilon = 0.4f;
             if (pos.y >= max.y) {
                 var offset = pos.y - max.y;
-                pos.y = min.y + offset;
+                pos.y = min.y + offset + epsilon;
             }
             if (pos.y <= min.y) {
                 var offset = min.y - pos.y;
-                pos.y = max.y - offset;
+                pos.y = max.y - offset - epsilon;
             }
             if (pos.x >= max.x) {
                 var offset = pos.x - max.x;
-                pos.x = min.x + offset;
+                pos.x = min.x + offset + epsilon;
             }
             if (pos.x <= min.x) {
                 var offset = min.x - pos.x;
-                pos.x = max.x - offset;
+                pos.x = max.x - offset - epsilon;
             }
             boid.Pos_SetPos(pos);
         }
