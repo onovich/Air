@@ -11,9 +11,9 @@ namespace Air {
         [Header("Game Config")]
         public float gameResetEnterTime;
 
-        // Boid
-        [Header("Boid Config")]
-        public int playerBoidTypeID;
+        // Leader
+        [Header("Leader Config")]
+        public int playerLeaderTypeID;
 
         // Map
         [Header("Map Config")]

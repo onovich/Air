@@ -22,30 +22,35 @@ namespace Air {
                 GLog.LogError($"MapTM Not Found {mapTypeID}");
             }
 
-            // Boid
+            // Leader
             var player = ctx.playerEntity;
 
             // - Player
             var spawnPoint = mapTM.SpawnPoint;
-            var owner = GameBoidDomain.Spawn(ctx,
-                                             config.playerBoidTypeID,
-                                             spawnPoint);
-            player.ownerBoidEntityID = owner.entityID;
+            var owner = GameLeaderDomain.Spawn(ctx,
+                                             config.playerLeaderTypeID,
+                                             spawnPoint,
+                                             AllyStatus.Friend);
+            player.ownerLeaderEntityID = owner.entityID;
             ctx.ownerSpawnPoint = spawnPoint;
+
+            // Boid
+            var boidTMArr = mapTM.boidSpawnArr;
+            var boidPosArr = mapTM.boidSpawnPosArr;
+            var boidAllyStatusArr = mapTM.boidSpawnAllyStatusArr;
+            GameBoidDomain.SpawnAll(ctx, boidTMArr, boidPosArr, boidAllyStatusArr);
 
             // Block
             var blockTMArr = mapTM.blockSpawnArr;
             var blockPosArr = mapTM.blockSpawnPosArr;
             var blockSizeArr = mapTM.blockSpawnSizeArr;
-            var blockIndexArr = mapTM.blockSpawnIndexArr;
-            GameBlockDomain.SpawnAll(ctx, blockTMArr, blockPosArr, blockSizeArr, blockIndexArr);
+            GameBlockDomain.SpawnAll(ctx, blockTMArr, blockPosArr, blockSizeArr);
 
             // Spike
             var spikeTMArr = mapTM.spikeSpawnArr;
             var spikePosArr = mapTM.spikeSpawnPosArr;
             var spikeSizeArr = mapTM.spikeSpawnSizeArr;
-            var spikeIndexArr = mapTM.spikeSpawnIndexArr;
-            GameSpikeDomain.SpawnAll(ctx, spikeTMArr, spikePosArr, spikeSizeArr, spikeIndexArr);
+            GameSpikeDomain.SpawnAll(ctx, spikeTMArr, spikePosArr, spikeSizeArr);
 
             // Camera
             CameraApp.Init(ctx.cameraContext, owner.transform, owner.Pos, mapTM.cameraConfinerWorldMax, mapTM.cameraConfinerWorldMin);
@@ -75,7 +80,7 @@ namespace Air {
         }
 
         public static void ApplyGameResult(GameBusinessContext ctx) {
-            var owner = ctx.Boid_GetOwner();
+            var owner = ctx.Leader_GetOwner();
             var game = ctx.gameEntity;
             var config = ctx.templateInfraContext.Config_Get();
             // game.fsmComponent.GameOver_Enter(config.gameResetEnterTime);
@@ -88,6 +93,13 @@ namespace Air {
 
             // Map
             GameMapDomain.UnSpawn(ctx);
+
+            // Leader
+            int leaderLen = ctx.leaderRepo.TakeAll(out var leaderArr);
+            for (int i = 0; i < leaderLen; i++) {
+                var leader = leaderArr[i];
+                GameLeaderDomain.UnSpawn(ctx, leader);
+            }
 
             // Boid
             int boidLen = ctx.boidRepo.TakeAll(out var boidArr);

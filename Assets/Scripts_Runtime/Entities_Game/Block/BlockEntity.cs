@@ -6,7 +6,7 @@ namespace Air {
     public class BlockEntity : MonoBehaviour {
 
         // Base Info
-        public int entityIndex;
+        public int entityID;
         public int typeID;
 
         // Render
@@ -42,7 +42,7 @@ namespace Air {
 
         // Rename
         public void Rename() {
-            this.name = $"Block - {typeID} - {entityIndex}";
+            this.name = $"Block - {typeID} - {entityID}";
         }
 
         public void TearDown() {

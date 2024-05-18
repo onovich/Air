@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: SO_GameConfig
   m_EditorClassIdentifier: 
   gameResetEnterTime: 0.5
-  playerBoidTypeID: 1
+  playerLeaderTypeID: 1
   originalMapTypeID: 1
   cameraDeadZoneNormalizedSize: {x: 0.1, y: 0.2}
   boidDeadShakeFrequency: 0

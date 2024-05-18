@@ -15,6 +15,7 @@ namespace Air {
         public BoidRepository boidRepo;
         public BlockRepository blockRepo;
         public SpikeRepository spikeRepo;
+        public LeaderRepository leaderRepo;
 
         // App
         public UIAppContext uiContext;
@@ -47,6 +48,7 @@ namespace Air {
             boidRepo = new BoidRepository();
             blockRepo = new BlockRepository();
             spikeRepo = new SpikeRepository();
+            leaderRepo = new LeaderRepository();
             hitResults = new RaycastHit2D[100];
         }
 
@@ -55,21 +57,13 @@ namespace Air {
             boidRepo.Clear();
             blockRepo.Clear();
             spikeRepo.Clear();
+            leaderRepo.Clear();
         }
 
-        // Boid
-        public BoidEntity Boid_GetOwner() {
-            boidRepo.TryGetBoid(playerEntity.ownerBoidEntityID, out var boid);
-            return boid;
-        }
-
-        public void Boid_ForEach(Action<BoidEntity> onAction) {
-            boidRepo.ForEach(onAction);
-        }
-
-        // Block
-        public void Block_ForEach(Action<BlockEntity> onAction) {
-            blockRepo.ForEach(onAction);
+        // Leader
+        public LeaderEntity Leader_GetOwner() {
+            leaderRepo.TryGetLeader(playerEntity.ownerLeaderEntityID, out var leader);
+            return leader;
         }
 
     }

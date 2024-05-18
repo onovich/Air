@@ -20,11 +20,15 @@ namespace Air {
         Dictionary<int, SpikeTM> spikeDict;
         public AsyncOperationHandle spikeHandle;
 
+        Dictionary<int, LeaderTM> leaderDict;
+        public AsyncOperationHandle leaderHandle;
+
         public TemplateInfraContext() {
             mapDict = new Dictionary<int, MapTM>();
             boidDict = new Dictionary<int, BoidTM>();
             blockDict = new Dictionary<int, BlockTM>();
             spikeDict = new Dictionary<int, SpikeTM>();
+            leaderDict = new Dictionary<int, LeaderTM>();
         }
 
         // Game
@@ -88,12 +92,26 @@ namespace Air {
             return has;
         }
 
+        // Leader
+        public void Leader_Add(LeaderTM leader) {
+            leaderDict.Add(leader.typeID, leader);
+        }
+
+        public bool Leader_TryGet(int typeID, out LeaderTM leader) {
+            var has = leaderDict.TryGetValue(typeID, out leader);
+            if (!has) {
+                GLog.LogError($"Leader {typeID} not found");
+            }
+            return has;
+        }
+
         // Clear
         public void Clear() {
             mapDict.Clear();
             boidDict.Clear();
             blockDict.Clear();
             spikeDict.Clear();
+            leaderDict.Clear();
         }
 
     }

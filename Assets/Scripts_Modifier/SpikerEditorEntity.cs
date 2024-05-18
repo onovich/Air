@@ -17,10 +17,9 @@ namespace Air.Modifier {
             return pos;
         }
 
-        public Vector2 GetSizeInt() {
+        public Vector2 GetSize() {
             var size = GetComponent<SpriteRenderer>().size;
-            var sizeInt = size;
-            return sizeInt;
+            return size;
         }
 
     }

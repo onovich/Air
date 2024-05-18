@@ -14,19 +14,18 @@ namespace Air.Modifier {
         [SerializeField] MapTM mapTM;
         [SerializeField] Transform blockGroup;
         [SerializeField] Transform spikeGroup;
+        [SerializeField] Transform boidGroup;
+        [SerializeField] Transform leaderGroup;
         [SerializeField] Transform spawnPointGroup;
         [SerializeField] Vector2 cameraConfinerWorldMax;
         [SerializeField] Vector2 cameraConfinerWorldMin;
 
-        IndexService indexService;
-
         [Button("Bake")]
         void Bake() {
-            indexService = new IndexService();
-            indexService.ResetIndex();
             BakeMapInfo();
             BakeBlock();
             BakeSpike();
+            BakeBoid();
             BakeSpawnPoint();
 
             EditorUtility.SetDirty(mapTM);
@@ -46,7 +45,6 @@ namespace Air.Modifier {
             List<SpikeTM> spikeTMList = new List<SpikeTM>();
             List<Vector2> spikeSpawnPosList = new List<Vector2>();
             List<Vector2> spikeSpawnSizeList = new List<Vector2>();
-            List<int> spikeIndexList = new List<int>();
             var spikeEditors = spikeGroup.GetComponentsInChildren<SpikerEditorEntity>();
             if (spikeEditors == null) {
                 Debug.Log("BlockEditors Not Found");
@@ -60,28 +58,71 @@ namespace Air.Modifier {
                 var pos = editor.GetPos();
                 spikeSpawnPosList.Add(pos);
 
-                var sizeInt = editor.GetSizeInt();
+                var sizeInt = editor.GetSize();
                 spikeSpawnSizeList.Add(sizeInt);
 
-                var index = indexService.PickSpikeIndex();
-                spikeIndexList.Add(index);
-                editor.index = index;
-
+                editor.index = i;
                 editor.Rename();
             }
             mapTM.spikeSpawnArr = spikeTMList.ToArray();
             mapTM.spikeSpawnPosArr = spikeSpawnPosList.ToArray();
             mapTM.spikeSpawnSizeArr = spikeSpawnSizeList.ToArray();
-            mapTM.spikeSpawnIndexArr = spikeIndexList.ToArray();
             mapTM.cameraConfinerWorldMax = cameraConfinerWorldMax;
             mapTM.cameraConfinerWorldMin = cameraConfinerWorldMin;
+        }
+
+        void BakeLeader(){
+            List<LeaderTM> leaderTMList = new List<LeaderTM>();
+            List<Vector2> leaderSpawnPosList = new List<Vector2>();
+            List<AllyStatus> leaderAllyStatusList = new List<AllyStatus>();
+            var leaderEditors = leaderGroup.GetComponentsInChildren<LeaderEditorEntity>();
+            if (leaderEditors == null) {
+                Debug.Log("LeaderEditors Not Found");
+            }
+            for (int i = 0; i < leaderEditors.Length; i++) {
+                var editor = leaderEditors[i];
+
+                var tm = editor.leaderTM;
+                leaderTMList.Add(tm);
+
+                var pos = editor.GetPos();
+                leaderSpawnPosList.Add(pos);
+
+                editor.index = i;
+                editor.Rename();
+            }
+            mapTM.leaderSpawnArr = leaderTMList.ToArray();
+            mapTM.leaderSpawnPosArr = leaderSpawnPosList.ToArray();
+        }
+
+        void BakeBoid() {
+            List<BoidTM> boidTMList = new List<BoidTM>();
+            List<Vector2> boidSpawnPosList = new List<Vector2>();
+            List<AllyStatus> boidAllyStatusList = new List<AllyStatus>();
+            var boidEditors = boidGroup.GetComponentsInChildren<BoidEditorEntity>();
+            if (boidEditors == null) {
+                Debug.Log("BoidEditors Not Found");
+            }
+            for (int i = 0; i < boidEditors.Length; i++) {
+                var editor = boidEditors[i];
+
+                var tm = editor.boidTM;
+                boidTMList.Add(tm);
+
+                var pos = editor.GetPos();
+                boidSpawnPosList.Add(pos);
+
+                editor.index = i;
+                editor.Rename();
+            }
+            mapTM.boidSpawnArr = boidTMList.ToArray();
+            mapTM.boidSpawnPosArr = boidSpawnPosList.ToArray();
         }
 
         void BakeBlock() {
             List<BlockTM> blockTMList = new List<BlockTM>();
             List<Vector2> blockSpawnPosList = new List<Vector2>();
             List<Vector2> blockSpawnSizeList = new List<Vector2>();
-            List<int> blockIndexList = new List<int>();
             var blockEditors = blockGroup.GetComponentsInChildren<BlockEditorEntity>();
             if (blockEditors == null) {
                 Debug.Log("BlockEditors Not Found");
@@ -95,19 +136,15 @@ namespace Air.Modifier {
                 var pos = editor.GetPos();
                 blockSpawnPosList.Add(pos);
 
-                var sizeInt = editor.GetSizeInt();
+                var sizeInt = editor.GetSize();
                 blockSpawnSizeList.Add(sizeInt);
 
-                var index = indexService.PickBlockIndex();
-                blockIndexList.Add(index);
-                editor.index = index;
-
+                editor.index = i;
                 editor.Rename();
             }
             mapTM.blockSpawnArr = blockTMList.ToArray();
             mapTM.blockSpawnPosArr = blockSpawnPosList.ToArray();
             mapTM.blockSpawnSizeArr = blockSpawnSizeList.ToArray();
-            mapTM.blockSpawnIndexArr = blockIndexList.ToArray();
         }
 
         void BakeSpawnPoint() {

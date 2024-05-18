@@ -15,7 +15,7 @@ namespace Air {
         }
 
         public void Add(SpikeEntity spike) {
-            all.Add(spike.entityIndex, spike);
+            all.Add(spike.entityID, spike);
         }
 
         public int TakeAll(out SpikeEntity[] spikes) {
@@ -29,7 +29,7 @@ namespace Air {
         }
 
         public void Remove(SpikeEntity spike) {
-            all.Remove(spike.entityIndex);
+            all.Remove(spike.entityID);
         }
 
         public bool TryGetSpike(int entityID, out SpikeEntity spike) {

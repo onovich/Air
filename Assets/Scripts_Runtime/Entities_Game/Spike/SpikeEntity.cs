@@ -6,7 +6,7 @@ namespace Air {
     public class SpikeEntity : MonoBehaviour {
 
         // Base Info
-        public int entityIndex;
+        public int entityID;
         public int typeID;
 
         // Render
@@ -43,7 +43,7 @@ namespace Air {
 
         // Rename
         public void Rename() {
-            this.name = $"Spike - {typeID} - {entityIndex}";
+            this.name = $"Spike - {typeID} - {entityID}";
         }
 
         public void TearDown() {

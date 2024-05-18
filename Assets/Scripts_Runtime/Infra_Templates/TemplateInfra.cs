@@ -50,6 +50,15 @@ namespace Air {
                 ctx.spikeHandle = handle;
             }
 
+            {
+                var handle = Addressables.LoadAssetsAsync<LeaderTM>("TM_Leader", null);
+                var leaderList = await handle.Task;
+                foreach (var tm in leaderList) {
+                    ctx.Leader_Add(tm);
+                }
+                ctx.leaderHandle = handle;
+            }
+
         }
 
         public static void Release(TemplateInfraContext ctx) {
@@ -67,6 +76,9 @@ namespace Air {
             }
             if (ctx.spikeHandle.IsValid()) {
                 Addressables.Release(ctx.spikeHandle);
+            }
+            if (ctx.leaderHandle.IsValid()) {
+                Addressables.Release(ctx.leaderHandle);
             }
         }
 

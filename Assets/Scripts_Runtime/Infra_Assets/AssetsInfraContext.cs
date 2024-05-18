@@ -56,6 +56,14 @@ namespace Air {
             return prefab;
         }
 
+        public GameObject Entity_GetLeader() {
+            var has = Entity_TryGet("Entity_Leader", out var prefab);
+            if (!has) {
+                GLog.LogError($"Entity Leader not found");
+            }
+            return prefab;
+        }
+
     }
 
 }

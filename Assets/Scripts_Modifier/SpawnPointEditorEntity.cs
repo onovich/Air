@@ -14,12 +14,6 @@ namespace Air.Modifier {
             return pos;
         }
 
-        public Vector2 GetSizeInt() {
-            var size = transform.localScale;
-            var sizeInt = size;
-            return sizeInt;
-        }
-
     }
 
 }

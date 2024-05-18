@@ -46,7 +46,7 @@ namespace Air {
             var game = ctx.gameEntity;
             var status = game.fsmComponent.status;
             if (status == GameStatus.Gaming) {
-                GameInputDomain.Owner_BakeInput(ctx, ctx.Boid_GetOwner());
+                GameInputDomain.Owner_BakeInput(ctx, ctx.Leader_GetOwner());
             }
         }
 
@@ -95,7 +95,7 @@ namespace Air {
 
             var game = ctx.gameEntity;
             var status = game.fsmComponent.status;
-            var owner = ctx.Boid_GetOwner();
+            var owner = ctx.Leader_GetOwner();
             if (status == GameStatus.Gaming || status == GameStatus.GameOver) {
 
                 // Camera

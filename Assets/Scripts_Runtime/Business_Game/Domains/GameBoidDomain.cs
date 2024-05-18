@@ -4,14 +4,25 @@ namespace Air {
 
     public static class GameBoidDomain {
 
-        public static BoidEntity Spawn(GameBusinessContext ctx, int typeID, Vector2 pos) {
+        public static BoidEntity Spawn(GameBusinessContext ctx, int typeID, Vector2 pos, AllyStatus allyStatus) {
             var Boid = GameFactory.Boid_Spawn(ctx.templateInfraContext,
                                               ctx.assetsInfraContext,
                                               ctx.idRecordService,
                                               typeID,
-                                              pos);
+                                              pos,
+                                              allyStatus);
             ctx.boidRepo.Add(Boid);
             return Boid;
+        }
+
+        public static void SpawnAll(GameBusinessContext ctx, BoidTM[] BoidTMArr, Vector2[] posArr, AllyStatus[] allyStatusArr) {
+            for (int i = 0; i < BoidTMArr.Length; i++) {
+                var tm = BoidTMArr[i];
+                if (tm == null) continue;
+                var pos = posArr[i];
+                var allyStatus = allyStatusArr[i];
+                Spawn(ctx, tm.typeID, pos, allyStatus);
+            }
         }
 
         public static void CheckAndUnSpawn(GameBusinessContext ctx, BoidEntity boid) {
@@ -23,15 +34,6 @@ namespace Air {
         public static void UnSpawn(GameBusinessContext ctx, BoidEntity boid) {
             ctx.boidRepo.Remove(boid);
             boid.TearDown();
-        }
-
-        static void OnFootEnterSpike(GameBusinessContext ctx, BoidEntity Boid) {
-            // - Enter Spike
-            Boid.Attr_GetHurt();
-        }
-
-        static void OnBodyTriggerEnter(GameBusinessContext gameContext, BoidEntity Boid, Collider2D other) {
-            // Eat Star
         }
 
         public static void ApplyMove(GameBusinessContext ctx, BoidEntity Boid, float dt) {

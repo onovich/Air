@@ -4,6 +4,47 @@ namespace Air {
 
     public static class GameFactory {
 
+        public static LeaderEntity Leader_Spawn(TemplateInfraContext templateInfraContext,
+                                 AssetsInfraContext assetsInfraContext,
+                                 IDRecordService idRecordService,
+                                 int typeID,
+                                 Vector2 pos,
+                                 AllyStatus allyStatus) {
+
+            var has = templateInfraContext.Leader_TryGet(typeID, out var leaderTM);
+            if (!has) {
+                GLog.LogError($"Leader {typeID} not found");
+            }
+
+            var prefab = assetsInfraContext.Entity_GetLeader();
+            var leader = GameObject.Instantiate(prefab).GetComponent<LeaderEntity>();
+            leader.Ctor();
+
+            // Base Info
+            leader.entityID = idRecordService.PickLeaderEntityID();
+            leader.typeID = typeID;
+            leader.allyStatus = allyStatus;
+
+            // Set Attr
+            leader.moveSpeed = leaderTM.moveSpeed;
+            leader.rotationSpeed = leaderTM.rotationSpeed;
+
+            // Set Pos
+            leader.Pos_SetPos(pos);
+
+            // Set Mesh
+            leader.Mesh_Set(leaderTM.mesh);
+
+            // Set FSM
+            leader.FSM_EnterIdle();
+
+            // Set VFX
+            leader.deadVFXName = leaderTM.deadVFX.name;
+            leader.deadVFXDuration = leaderTM.deadVFXDuration;
+
+            return leader;
+        }
+
         public static MapEntity Map_Spawn(TemplateInfraContext templateInfraContext,
                                  AssetsInfraContext assetsInfraContext,
                                  int typeID) {
@@ -27,7 +68,8 @@ namespace Air {
                                  AssetsInfraContext assetsInfraContext,
                                  IDRecordService idRecordService,
                                  int typeID,
-                                 Vector2 pos) {
+                                 Vector2 pos,
+                                 AllyStatus allyStatus) {
 
             var has = templateInfraContext.Boid_TryGet(typeID, out var boidTM);
             if (!has) {
@@ -41,7 +83,7 @@ namespace Air {
             // Base Info
             boid.entityID = idRecordService.PickBoidEntityID();
             boid.typeID = typeID;
-            boid.allyStatus = boidTM.allyStatus;
+            boid.allyStatus = allyStatus;
 
             // Set Attr
             boid.moveSpeed = boidTM.moveSpeed;
@@ -70,8 +112,7 @@ namespace Air {
                                   IDRecordService idRecordService,
                                   int typeID,
                                   Vector2 pos,
-                                  Vector2 size,
-                                  int index) {
+                                  Vector2 size) {
 
             var has = templateInfraContext.Block_TryGet(typeID, out var blockTM);
             if (!has) {
@@ -83,7 +124,7 @@ namespace Air {
             block.Ctor();
 
             // Base Info
-            block.entityIndex = index;
+            block.entityID = idRecordService.PickBlockEntityID();
             block.typeID = typeID;
 
             // Set Pos
@@ -106,8 +147,7 @@ namespace Air {
                                   IDRecordService idRecordService,
                                   int typeID,
                                   Vector2 pos,
-                                  Vector2 size,
-                                  int index) {
+                                  Vector2 size) {
 
             var has = templateInfraContext.Spike_TryGet(typeID, out var blockTM);
             if (!has) {
@@ -119,7 +159,7 @@ namespace Air {
             spike.Ctor();
 
             // Base Info
-            spike.entityIndex = index;
+            spike.entityID = idRecordService.PickSpikeEntityID();
             spike.typeID = typeID;
 
             // Set Pos

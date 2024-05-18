@@ -15,7 +15,7 @@ namespace Air {
         }
 
         public void Add(BlockEntity block) {
-            all.Add(block.entityIndex, block);
+            all.Add(block.entityID, block);
         }
 
         public int TakeAll(out BlockEntity[] blocks) {
@@ -29,7 +29,7 @@ namespace Air {
         }
 
         public void Remove(BlockEntity block) {
-            all.Remove(block.entityIndex);
+            all.Remove(block.entityID);
         }
 
         public bool TryGetBlock(int entityID, out BlockEntity block) {

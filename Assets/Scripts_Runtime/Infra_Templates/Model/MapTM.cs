@@ -18,19 +18,22 @@ namespace Air {
         // Boid Spawn
         public BoidTM[] boidSpawnArr;
         public Vector2[] boidSpawnPosArr;
-        public int[] boidSpawnIndexArr;
+        public AllyStatus[] boidSpawnAllyStatusArr;
 
         // Block Spawn
         public BlockTM[] blockSpawnArr;
         public Vector2[] blockSpawnPosArr;
         public Vector2[] blockSpawnSizeArr;
-        public int[] blockSpawnIndexArr;
 
         // Spike Spawn
         public SpikeTM[] spikeSpawnArr;
         public Vector2[] spikeSpawnPosArr;
         public Vector2[] spikeSpawnSizeArr;
-        public int[] spikeSpawnIndexArr;
+
+        // Leader Spawn
+        public LeaderTM[] leaderSpawnArr;
+        public Vector2[] leaderSpawnPosArr;
+        public AllyStatus[] leaderSpawnAllyStatusArr;
 
         // Camera
         public Vector2 cameraConfinerWorldMax;

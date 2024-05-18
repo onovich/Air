@@ -7,9 +7,9 @@ namespace Air {
             inputEntity.ProcessInput(ctx.mainCamera, dt);
         }
 
-        public static void Owner_BakeInput(GameBusinessContext ctx, BoidEntity owner) {
+        public static void Owner_BakeInput(GameBusinessContext ctx, LeaderEntity owner) {
             InputEntity inputEntity = ctx.inputEntity;
-            ref BoidInputComponent inputCom = ref owner.inputCom;
+            ref LeaderInputComponent inputCom = ref owner.inputCom;
             inputCom.moveAxis = inputEntity.moveAxis;
         }
 

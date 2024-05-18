@@ -55,6 +55,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 4e812ad70b4b0452aa6f7c525f79e6ed, type: 2}
   - {fileID: 11400000, guid: 2f1e06fbe335f4d34bba2ff159a5dc36, type: 2}
   - {fileID: 11400000, guid: a38a8ad709262449cafa5666cd3478e0, type: 2}
+  - {fileID: 11400000, guid: 4875be6c9ee5d428ebd1d686e73bbff8, type: 2}
   m_BuildSettings:
     m_CompileScriptsInVirtualMode: 0
     m_CleanupStreamingAssetsAfterBuilds: 1
@@ -105,6 +106,7 @@ MonoBehaviour:
     - TM_Map
     - TM_Spike
     - TM_Terrain
+    - TM_Leader
   m_SchemaTemplates: []
   m_GroupTemplateObjects:
   - {fileID: 11400000, guid: 2316a715d6a6eb047bed5ac4c42ad64f, type: 2}
