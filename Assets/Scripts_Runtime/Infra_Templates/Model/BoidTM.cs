@@ -10,11 +10,12 @@ namespace Air {
         public int typeID;
 
         [Header("Attr")]
-        public float moveSpeed;
-        public float rotationSpeed;
         public int hpMax;
+        public float maxSteerForce;
+        public float maxSpeed;
+        public float minSpeed;
 
-        [Header("Move")]
+        [Header("Boids AI Weight")]
         public float separationWeight;
         public float separationRadius;
         public float alignmentWeight;

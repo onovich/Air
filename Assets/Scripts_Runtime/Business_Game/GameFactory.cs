@@ -86,8 +86,6 @@ namespace Air {
             boid.allyStatus = allyStatus;
 
             // Set Attr
-            boid.moveSpeed = boidTM.moveSpeed;
-            boid.rotationSpeed = boidTM.rotationSpeed;
             boid.hp = boidTM.hpMax;
             boid.hpMax = boidTM.hpMax;
 

@@ -11,8 +11,6 @@ namespace Air {
         public AllyStatus allyStatus;
 
         // Attr
-        public float moveSpeed;
-        public float rotationSpeed;
         public int hp;
         public int hpMax;
 
@@ -34,9 +32,9 @@ namespace Air {
         public float deadVFXDuration;
 
         // Pos
-        public Vector2 Pos => Pos_GetPos();
+        public Vector2 Pos => transform.position;
         public Vector2Int GridPos => new Vector2Int((int)Pos.x, (int)Pos.y);
-        public Vector2 dir;
+        public Vector2 Dir => transform.forward;
 
         // TearDown
         public bool needTearDown;
@@ -44,7 +42,6 @@ namespace Air {
         public void Ctor() {
             fsmCom = new BoidFSMComponent();
             inputCom = new BoidInputComponent();
-            dir = Vector2.up;
         }
 
         // Pos
@@ -52,15 +49,12 @@ namespace Air {
             transform.position = pos;
         }
 
-        Vector2 Pos_GetPos() {
-            return transform.position;
+        // Velocity
+        public void Velocity_Set(Vector2 velocity) {
+            this.velocity = velocity;
         }
 
         // Attr
-        public float Attr_GetMoveSpeed() {
-            return moveSpeed;
-        }
-
         public void Attr_GetHurt() {
             hp -= 1;
         }
@@ -74,12 +68,8 @@ namespace Air {
         }
 
         // Move
-        public void Move_ApplyMove(float dt) {
-            Move_Apply(inputCom.moveAxis, Attr_GetMoveSpeed(), dt);
-        }
-
-        public void Move_Stop() {
-            Move_Apply(Vector2.zero, 0, 0);
+        public void Move_SetUp(Vector2 dir) {
+            this.transform.up = dir;
         }
 
         void Move_Apply(Vector2 axis, float moveSpeed, float fixdt) {
@@ -88,7 +78,13 @@ namespace Air {
                 velocity.y = axis.y * moveSpeed;
             }
             this.transform.position += (Vector3)velocity * fixdt;
-            dir = velocity.normalized;
+        }
+
+        public void Move_UpdateRotation() {
+            if (velocity.sqrMagnitude > 0.01f) {
+                float angle = Mathf.Atan2(velocity.y, velocity.x) * Mathf.Rad2Deg;
+                transform.rotation = Quaternion.Euler(new Vector3(0, 0, angle));
+            }
         }
 
         // FSM
