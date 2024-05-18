@@ -1,0 +1,41 @@
+﻿#pragma kernel CSMain
+static const int threadGroupSize = 1024;
+
+struct Boid {
+    float3 position;
+    float3 direction;
+
+    float3 alignment;
+    float3 cohesionCenter;
+    float3 separation;
+    int otherCount;
+};
+
+RWStructuredBuffer<Boid> boids;
+uint numBoids;
+float viewRadius;
+float avoidRadius;
+
+[numthreads(threadGroupSize,1,1)]
+void CSMain (uint3 id : SV_DispatchThreadID) {
+    uint indexA = id.x;
+
+    for (uint indexB = 0; indexB < numBoids; indexB++) {
+        if (indexA != indexB) {
+            Boid boidA = boids[indexA];
+            Boid boidB = boids[indexB];
+            float3 offset = boidB.position - boidA.position;
+            float sqrDst = offset.x * offset.x + offset.y * offset.y; 
+
+            if (sqrDst < viewRadius * viewRadius) {
+                boids[indexA].otherCount += 1;
+                boids[indexA].alignment += boidB.direction;
+                boids[indexA].cohesionCenter += boidB.position;
+
+                if (sqrDst < avoidRadius * avoidRadius) {
+                    boids[indexA].separation -= offset / sqrt(sqrDst);
+                }
+            }
+        }
+    }
+}

@@ -42,41 +42,67 @@ namespace Air {
             Boid_Move(ctx, boid, dt);
         }
 
-        // Boids AI
-        public static void Boid_Move(GameBusinessContext ctx, BoidEntity boid, float fixdt) {
-            var pos = boid.Pos;
-            var posInt = boid.GridPos;
-            var allyStatus = boid.allyStatus;
-            var acceleration = Vector2.zero;
+        // CS
+        public static void ProcessCS(GameBusinessContext ctx, float dt) {
+            var boidLen = ctx.boidRepo.TakeAll(out var boids);
+            var boidData = new BoidData[boidLen];
 
-            var has = ctx.templateInfraContext.Boid_TryGet(boid.typeID, out var boidTM);
+            for (int i = 0; i < boidLen; i++) {
+                boidData[i].position = boids[i].Pos;
+                boidData[i].direction = boids[i].Up;
+            }
+
+            var boidBuffer = new ComputeBuffer(boidLen, BoidData.Size);
+            boidBuffer.SetData(boidData);
+
+            var config = ctx.templateInfraContext.Config_Get();
+            var compute = config.boidCS;
+
+            var has = ctx.templateInfraContext.Boid_TryGet(1, out var boidTM);
             if (!has) {
-                GLog.LogError("Boid_Move: boidTM not found: " + boid.typeID);
+                GLog.LogError("SetCS: boidTM not found: " + 1);
             }
 
-            var boidLen = ctx.boidRepo.TryGetAround(boid.entityID, allyStatus, posInt, 4, 10, out var boids);
-            if (boidLen == 0) {
-                acceleration = boid.velocity;
-                Move(ctx, boid, acceleration, boidTM.minSpeed, boidTM.maxSpeed, fixdt, true);
-                return;
+            compute.SetBuffer(0, "boids", boidBuffer);
+            compute.SetInt("numBoids", boidLen);
+            compute.SetFloat("viewRadius", boidTM.alignmentRadius);
+            compute.SetFloat("avoidRadius", boidTM.separationRadius);
+
+            int threadGroupSize = 1024;
+            int threadGroups = Mathf.CeilToInt(boidLen / (float)threadGroupSize);
+            compute.Dispatch(0, threadGroups, 1, 1);
+
+            boidBuffer.GetData(boidData);
+
+            for (int i = 0; i < boidLen; i++) {
+                var boid = boids[i];
+                var alignment = boidData[i].alignment;
+                var separation = boidData[i].separation;
+                var otherNum = boidData[i].otherCount;
+                var center = boidData[i].cohesionCenter;
+                var cohesion = otherNum > 0 ? center / otherNum - boid.Pos : Vector3.zero;
+
+                var acceleration = Vector3.zero;
+                var separationForce = SteerTowards(ctx, separation, boid) * boidTM.separationWeight;
+                acceleration += separationForce;
+
+                var alignmentForce = SteerTowards(ctx, alignment, boid) * boidTM.alignmentWeight;
+                acceleration += alignmentForce;
+
+                var cohesionForce = SteerTowards(ctx, cohesion, boid) * boidTM.cohesionWeight;
+                acceleration += cohesionForce;
+
+                Move(ctx, boid, acceleration, boidTM.minSpeed, boidTM.maxSpeed, dt, false);
             }
 
-            var separation = SteerTowards(ctx, Boid_GetSeparationVector(ctx, pos, boids, boidLen,
-            boidTM.separationRadius), boid) * boidTM.separationWeight;
-            acceleration += separation;
-
-            var alignment = SteerTowards(ctx, Boid_GetAlignmentVector(ctx, pos, boids, boidLen,
-            boidTM.alignmentRadius), boid) * boidTM.alignmentWeight;
-            acceleration += alignment;
-
-            var cohesion = SteerTowards(ctx, Boid_GetCohesionVector(ctx, pos, boids, boidLen,
-            boidTM.cohesionRadius), boid) * boidTM.cohesionWeight;
-            acceleration += cohesion;
-
-            Move(ctx, boid, acceleration, boidTM.minSpeed, boidTM.maxSpeed, fixdt, false);
+            boidBuffer.Release();
         }
 
-        static void Move(GameBusinessContext ctx, BoidEntity boid, Vector2 acceleration, float minSpeed, float maxSpeed, float fixdt, bool hasNoBoids) {
+        // Boids AI
+        public static void Boid_Move(GameBusinessContext ctx, BoidEntity boid, float fixdt) {
+        }
+
+        static void Move(GameBusinessContext ctx, BoidEntity boid, Vector3 acceleration, float minSpeed, float maxSpeed, float fixdt, bool hasNoBoids) {
             var velocity = boid.velocity;
             velocity += acceleration * fixdt;
 
@@ -100,87 +126,14 @@ namespace Air {
             ctx.boidRepo.UpdatePos(boid, oldPos);
         }
 
-        static Vector2 SteerTowards(GameBusinessContext ctx, Vector2 vector, BoidEntity boid) {
+        static Vector3 SteerTowards(GameBusinessContext ctx, Vector3 vector, BoidEntity boid) {
             var typeID = boid.typeID;
             var has = ctx.templateInfraContext.Boid_TryGet(typeID, out var boidTM);
             if (!has) {
                 GLog.LogError("SteerTowards: boidTM not found: " + typeID);
             }
-            Vector2 v = vector.normalized * boidTM.maxSpeed - boid.velocity;
-            return Vector2.ClampMagnitude(v, boidTM.maxSteerForce);
-        }
-
-        static Vector2 Boid_GetSeparationVector(GameBusinessContext ctx, Vector2 boidPos, BoidEntity[] boids, int boidLen, float radius) {
-            var separation = Vector2.zero;
-            if (boidLen == 0) {
-                return separation;
-            }
-            for (int i = 0; i < boidLen; i += 1) {
-                var other = boids[i];
-                var offset = other.Pos - boidPos;
-                float sqrDst = offset.x * offset.x + offset.y * offset.y;
-
-                if (sqrDst >= radius * radius) {
-                    continue;
-                }
-                if (sqrDst < 0.01f) {
-                    separation -= ctx.randomService.InsideUnitCircle();
-                    continue;
-                }
-                separation -= offset / sqrDst;
-            }
-            return separation.normalized;
-        }
-
-        static Vector2 Boid_GetAlignmentVector(GameBusinessContext ctx, Vector2 boidPos, BoidEntity[] boids, int boidLen, float radius) {
-            var alignment = Vector2.zero;
-            if (boidLen == 0) {
-                return alignment;
-            }
-            for (int i = 0; i < boidLen; i += 1) {
-                var other = boids[i];
-                var offset = other.Pos - boidPos;
-                float sqrDst = offset.x * offset.x + offset.y * offset.y;
-
-                if (sqrDst >= radius * radius) {
-                    continue;
-                }
-
-                if (sqrDst < 0.01f) {
-                    continue;
-                }
-                var dir = other.velocity;
-                alignment += dir;
-            }
-            return alignment.normalized;
-        }
-
-        static Vector2 Boid_GetCohesionVector(GameBusinessContext ctx, Vector2 boidPos, BoidEntity[] boids, int boidLen, float radius) {
-            var cohesion = Vector2.zero;
-            if (boidLen == 0) {
-                return cohesion;
-            }
-            var num = 0;
-            for (int i = 0; i < boidLen; i += 1) {
-                var other = boids[i];
-                var offset = other.Pos - boidPos;
-                float sqrDst = offset.x * offset.x + offset.y * offset.y;
-
-                if (sqrDst >= radius * radius) {
-                    continue;
-                }
-
-                if (sqrDst < 0.01f) {
-                    continue;
-                }
-
-                var otherPos = other.Pos;
-                cohesion += otherPos;
-                num += 1;
-            }
-            cohesion = cohesion / num;
-            var dir = cohesion - boidPos;
-            return dir.normalized;
+            Vector3 v = vector.normalized * boidTM.maxSpeed - boid.velocity;
+            return Vector3.ClampMagnitude(v, boidTM.maxSteerForce);
         }
 
         public static void ApplyConstraint(GameBusinessContext ctx, BoidEntity boid, float dt) {

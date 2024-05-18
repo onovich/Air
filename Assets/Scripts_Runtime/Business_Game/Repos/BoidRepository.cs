@@ -69,7 +69,7 @@ namespace Air {
             return all.TryGetValue(entityID, out boid);
         }
 
-        public bool IsInRange(int entityID, in Vector2 pos, float range) {
+        public bool IsInRange(int entityID, in Vector3 pos, float range) {
             bool has = TryGetBoid(entityID, out var boid);
             if (!has) {
                 return false;
@@ -117,7 +117,7 @@ namespace Air {
             return roleCount;
         }
 
-        public BoidEntity GetNeareast(AllyStatus allyStatus, Vector2 pos, float radius) {
+        public BoidEntity GetNeareast(AllyStatus allyStatus, Vector3 pos, float radius) {
             BoidEntity nearestRole = null;
             float nearestDist = float.MaxValue;
             float radiusSqr = radius * radius;

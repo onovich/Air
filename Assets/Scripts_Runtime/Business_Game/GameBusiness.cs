@@ -76,6 +76,8 @@ namespace Air {
                     GameBoidFSMController.TickFSM(ctx, boid, dt);
                 }
 
+                GameBoidDomain.ProcessCS(ctx, dt);
+
                 Physics2D.Simulate(dt);
 
                 // Raycast

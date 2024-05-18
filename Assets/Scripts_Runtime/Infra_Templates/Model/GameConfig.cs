@@ -30,6 +30,9 @@ namespace Air {
         public EasingType boidDeadShakeEasingType;
         public EasingMode boidDeadShakeEasingMode;
 
+        [Header("CS Config")]
+        public ComputeShader boidCS;
+
     }
 
 }

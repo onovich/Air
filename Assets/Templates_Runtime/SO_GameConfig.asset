@@ -21,3 +21,4 @@ MonoBehaviour:
   boidDeadShakeDuration: 0
   boidDeadShakeEasingType: 0
   boidDeadShakeEasingMode: 0
+  boidCS: {fileID: 7200000, guid: 0bc716fc7aa5947419c1da976ea2a04a, type: 3}
