@@ -10,6 +10,7 @@ namespace Air {
     public class Main : MonoBehaviour {
 
         [SerializeField] bool drawCameraGizmos;
+        [SerializeField] bool showFPS;
 
         InputEntity inputEntity;
 
@@ -141,6 +142,10 @@ namespace Air {
 
         void OnApplicationQuit() {
             TearDown();
+        }
+
+        void OnGUI() {
+            GameBusiness.OnGUI(showFPS);
         }
 
         void OnDestroy() {

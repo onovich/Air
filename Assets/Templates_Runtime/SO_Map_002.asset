@@ -1,0 +1,40 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a1e22956f2334251b773b2a1967c65b, type: 3}
+  m_Name: SO_Map_002
+  m_EditorClassIdentifier: 
+  typeID: 2
+  mapSize: {x: 40, y: 24}
+  mapPos: {x: 0, y: -2}
+  SpawnPoint: {x: -3, y: -2}
+  boidSpawnArr:
+  - {fileID: 11400000, guid: b74c6ea0c63d24141bc55dc25267ba3e, type: 2}
+  - {fileID: 11400000, guid: b74c6ea0c63d24141bc55dc25267ba3e, type: 2}
+  - {fileID: 11400000, guid: b74c6ea0c63d24141bc55dc25267ba3e, type: 2}
+  - {fileID: 11400000, guid: b74c6ea0c63d24141bc55dc25267ba3e, type: 2}
+  boidSpawnPosArr:
+  - {x: 0, y: 0}
+  - {x: -0.81, y: -2.08}
+  - {x: -5.18, y: -2.86}
+  - {x: -5.85, y: 0.49}
+  boidSpawnAllyStatusArr: 01000000010000000100000001000000
+  blockSpawnArr: []
+  blockSpawnPosArr: []
+  blockSpawnSizeArr: []
+  spikeSpawnArr: []
+  spikeSpawnPosArr: []
+  spikeSpawnSizeArr: []
+  leaderSpawnArr: []
+  leaderSpawnPosArr: []
+  leaderSpawnAllyStatusArr: 
+  cameraConfinerWorldMax: {x: 30, y: 20}
+  cameraConfinerWorldMin: {x: -30, y: -20}

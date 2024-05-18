@@ -106,7 +106,20 @@ namespace Air {
             }
             // VFX
             VFXApp.LateTick(ctx.vfxContext, dt);
+
+            // FPS
+            FPSHelper.Tick(dt);
         }
+
+#if UNITY_EDITOR
+        public static void OnGUI(bool showFPS) {
+            if (!showFPS) {
+                return;
+            }
+            FPSHelper.OnGUI();
+        }
+
+#endif
 
         public static void TearDown(GameBusinessContext ctx) {
             var game = ctx.gameEntity;

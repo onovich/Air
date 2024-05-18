@@ -30,6 +30,7 @@ namespace Air.Modifier {
             BakeSpawnPoint();
 
             EditorUtility.SetDirty(mapTM);
+            AddressableHelper.SetAddressable(mapTM, "TM_Map", "TM_Map", true);
             AssetDatabase.SaveAssets();
             Debug.Log("Bake Sucess");
         }
