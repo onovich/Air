@@ -38,12 +38,8 @@ namespace Air {
             boid.TearDown();
         }
 
-        public static void ApplyMove(GameBusinessContext ctx, BoidEntity boid, float dt) {
-            Boid_Move(ctx, boid, dt);
-        }
-
         // CS
-        public static void ProcessCS(GameBusinessContext ctx, float dt) {
+        public static void ProcessCS(GameBusinessContext ctx, int typeID, float dt) {
             var boidLen = ctx.boidRepo.TakeAll(out var boids);
             var boidData = new BoidData[boidLen];
 
@@ -52,18 +48,30 @@ namespace Air {
                 boidData[i].direction = boids[i].Up;
             }
 
-            var boidBuffer = new ComputeBuffer(boidLen, BoidData.Size);
-            boidBuffer.SetData(boidData);
+            if (ctx.boidBuffer == null || ctx.boidBuffer.count != boidLen) {
+                if (ctx.boidBuffer != null) {
+                    ctx.boidBuffer.Release();
+                    ctx.boidBuffer = null;
+                }
+                ctx.boidBuffer = new ComputeBuffer(boidLen, BoidData.Size);
+            }
+
+            if (boidData == null) {
+                return;
+            }
+
+            ctx.boidBuffer.SetData(boidData, 0, 0, boidLen);
 
             var config = ctx.templateInfraContext.Config_Get();
             var compute = config.boidCS;
 
-            var has = ctx.templateInfraContext.Boid_TryGet(1, out var boidTM);
+            var has = ctx.templateInfraContext.Boid_TryGet(typeID, out var boidTM);
             if (!has) {
-                GLog.LogError("SetCS: boidTM not found: " + 1);
+                GLog.LogError("SetCS: boidTM not found: " + typeID);
+                return;
             }
 
-            compute.SetBuffer(0, "boids", boidBuffer);
+            compute.SetBuffer(0, "boids", ctx.boidBuffer);
             compute.SetInt("numBoids", boidLen);
             compute.SetFloat("viewRadius", boidTM.alignmentRadius);
             compute.SetFloat("avoidRadius", boidTM.separationRadius);
@@ -72,34 +80,41 @@ namespace Air {
             int threadGroups = Mathf.CeilToInt(boidLen / (float)threadGroupSize);
             compute.Dispatch(0, threadGroups, 1, 1);
 
-            boidBuffer.GetData(boidData);
-
+            ctx.boidBuffer.GetData(boidData, 0, 0, boidLen);
             for (int i = 0; i < boidLen; i++) {
-                var boid = boids[i];
-                var alignment = boidData[i].alignment;
-                var separation = boidData[i].separation;
-                var otherNum = boidData[i].otherCount;
-                var center = boidData[i].cohesionCenter;
-                var cohesion = otherNum > 0 ? center / otherNum - boid.Pos : Vector3.zero;
-
-                var acceleration = Vector3.zero;
-                var separationForce = SteerTowards(ctx, separation, boid) * boidTM.separationWeight;
-                acceleration += separationForce;
-
-                var alignmentForce = SteerTowards(ctx, alignment, boid) * boidTM.alignmentWeight;
-                acceleration += alignmentForce;
-
-                var cohesionForce = SteerTowards(ctx, cohesion, boid) * boidTM.cohesionWeight;
-                acceleration += cohesionForce;
-
-                Move(ctx, boid, acceleration, boidTM.minSpeed, boidTM.maxSpeed, dt, false);
+                boids[i].boidData = boidData[i];
             }
-
-            boidBuffer.Release();
         }
 
-        // Boids AI
-        public static void Boid_Move(GameBusinessContext ctx, BoidEntity boid, float fixdt) {
+        public static void ReleaseCS(GameBusinessContext ctx) {
+            ctx.boidBuffer.Release();
+        }
+
+        public static void ApplyMove(GameBusinessContext ctx, BoidEntity boid, float dt) {
+            var boidData = boid.boidData;
+            var alignment = boidData.alignment;
+            var separation = boidData.separation;
+            var otherNum = boidData.otherCount;
+            var center = boidData.cohesionCenter;
+            var cohesion = otherNum > 0 ? center / otherNum - boid.Pos : Vector3.zero;
+
+            var typeID = boid.typeID;
+            var has = ctx.templateInfraContext.Boid_TryGet(typeID, out var boidTM);
+            if (!has) {
+                GLog.LogError("SetCS: boidTM not found: " + typeID);
+            }
+
+            var acceleration = Vector3.zero;
+            var separationForce = SteerTowards(ctx, separation, boid) * boidTM.separationWeight;
+            acceleration += separationForce;
+
+            var alignmentForce = SteerTowards(ctx, alignment, boid) * boidTM.alignmentWeight;
+            acceleration += alignmentForce;
+
+            var cohesionForce = SteerTowards(ctx, cohesion, boid) * boidTM.cohesionWeight;
+            acceleration += cohesionForce;
+
+            Move(ctx, boid, acceleration, boidTM.minSpeed, boidTM.maxSpeed, dt, false);
         }
 
         static void Move(GameBusinessContext ctx, BoidEntity boid, Vector3 acceleration, float minSpeed, float maxSpeed, float fixdt, bool hasNoBoids) {

@@ -41,6 +41,8 @@ namespace Air {
 
         // TEMP
         public RaycastHit2D[] hitResults;
+        public BoidData[] boidDataTemp;
+        public ComputeBuffer boidBuffer;
 
         public GameBusinessContext() {
             gameEntity = new GameEntity();
@@ -52,6 +54,7 @@ namespace Air {
             spikeRepo = new SpikeRepository();
             leaderRepo = new LeaderRepository();
             hitResults = new RaycastHit2D[100];
+            boidDataTemp = new BoidData[1000];
         }
 
         public void Reset() {
@@ -60,6 +63,7 @@ namespace Air {
             blockRepo.Clear();
             spikeRepo.Clear();
             leaderRepo.Clear();
+            boidBuffer?.Release();
         }
 
         // Leader

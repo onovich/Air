@@ -70,13 +70,17 @@ namespace Air {
             if (status == GameStatus.Gaming) {
 
                 // Boids
+                //// CS
+                //// 临时代码
+                var playerBoidTypeID = 1;
+                GameBoidDomain.ProcessCS(ctx, playerBoidTypeID, dt);
+
+                //// FSM
                 var boidLen = ctx.boidRepo.TakeAll(out var boidArr);
                 for (int i = 0; i < boidLen; i++) {
                     var boid = boidArr[i];
                     GameBoidFSMController.TickFSM(ctx, boid, dt);
                 }
-
-                GameBoidDomain.ProcessCS(ctx, dt);
 
                 Physics2D.Simulate(dt);
 
