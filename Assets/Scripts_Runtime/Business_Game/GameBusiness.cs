@@ -69,6 +69,10 @@ namespace Air {
             var status = game.fsmComponent.status;
             if (status == GameStatus.Gaming) {
 
+                // Leader
+                var leader = ctx.Leader_GetOwner();
+                GameLeaderFSMController.TickFSM(ctx, leader, dt);
+
                 // Boids
                 //// CS
                 //// 临时代码
@@ -96,6 +100,9 @@ namespace Air {
             var status = game.fsmComponent.status;
             var owner = ctx.Leader_GetOwner();
             if (status == GameStatus.Gaming || status == GameStatus.GameOver) {
+
+                // Leader
+                GameLeaderDomain.CheckAndUnSpawn(ctx, owner);
 
                 // Boids
                 var boidLen = ctx.boidRepo.TakeAll(out var boidArr);

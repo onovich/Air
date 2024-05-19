@@ -13,8 +13,6 @@ namespace Air {
         // Attr
         public float moveSpeed;
         public float rotationSpeed;
-        public int hp;
-        public int hpMax;
 
         // Physics
         public Vector2 velocity;

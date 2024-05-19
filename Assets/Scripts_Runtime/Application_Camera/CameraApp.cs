@@ -16,8 +16,8 @@ namespace Air {
             var deadZoneNormalizedSize = config.cameraDeadZoneNormalizedSize;
 
             SetDeadZone(ctx, deadZoneNormalizedSize);
-            EnableDeadZone(ctx, true);
-            SetMoveByDriver(ctx, driver);
+            // EnableDeadZone(ctx, true);
+            // SetMoveByDriver(ctx, driver);
         }
 
         public static void LateTick(CameraAppContext ctx, float dt) {
