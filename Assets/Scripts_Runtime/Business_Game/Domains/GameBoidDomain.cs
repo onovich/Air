@@ -41,7 +41,12 @@ namespace Air {
         // CS
         public static void ProcessCS(GameBusinessContext ctx, int typeID, float dt) {
             var boidLen = ctx.boidRepo.TakeAll(out var boids);
-            var csModel = new BoidCSModel[boidLen];
+            var csModel = ctx.boidCSModelTemp;
+
+            if (csModel == null || csModel.Length != boidLen) {
+                csModel = new BoidCSModel[boidLen];
+                ctx.boidCSModelTemp = csModel;
+            }
 
             for (int i = 0; i < boidLen; i++) {
                 csModel[i].position = boids[i].Pos;

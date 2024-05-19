@@ -41,7 +41,7 @@ namespace Air {
 
         // TEMP
         public RaycastHit2D[] hitResults;
-        public BoidCSModel[] boidDataTemp;
+        public BoidCSModel[] boidCSModelTemp;
         public ComputeBuffer boidBuffer;
 
         public GameBusinessContext() {
@@ -54,7 +54,6 @@ namespace Air {
             spikeRepo = new SpikeRepository();
             leaderRepo = new LeaderRepository();
             hitResults = new RaycastHit2D[100];
-            boidDataTemp = new BoidCSModel[1000];
         }
 
         public void Reset() {
