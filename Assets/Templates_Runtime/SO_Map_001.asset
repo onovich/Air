@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: SO_Map_001
   m_EditorClassIdentifier: 
   typeID: 1
-  mapSize: {x: 40, y: 24}
+  mapSize: {x: 39.5, y: 22}
   mapPos: {x: 0, y: 0}
   SpawnPoint: {x: 0, y: 0}
   boidSpawnArr:
