@@ -8,12 +8,13 @@ namespace Air {
         public Vector3 alignment;
         public Vector3 cohesionCenter;
         public Vector3 separation;
+        public Vector3 follow;
 
         public int cohesionCount;
 
         public static int Size {
             get {
-                return sizeof(float) * 3 * 5 + sizeof(int);
+                return sizeof(float) * 3 * 6 + sizeof(int);
             }
         }
     }

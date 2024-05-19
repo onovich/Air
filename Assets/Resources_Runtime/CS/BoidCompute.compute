@@ -8,6 +8,7 @@ struct Boid {
     float3 alignment;
     float3 cohesionCenter;
     float3 separation;
+    float3 follow;
 
     int cohesionCount;
 };
@@ -17,14 +18,16 @@ uint boidsCount;
 float alignmentRadius;
 float separationRadius;
 float cohesionRadius;
+float followRadius;
+float3 followTarget;
 
 [numthreads(threadGroupSize,1,1)]
 void CSMain (uint3 id : SV_DispatchThreadID) {
     uint indexA = id.x;
+    Boid boidA = boids[indexA];
 
     for (uint indexB = 0; indexB < boidsCount; indexB++) {
         if (indexA != indexB) {
-            Boid boidA = boids[indexA];
             Boid boidB = boids[indexB];
             float3 offset = boidB.position - boidA.position;
             float sqrDst = offset.x * offset.x + offset.y * offset.y; 
@@ -40,5 +43,12 @@ void CSMain (uint3 id : SV_DispatchThreadID) {
                 boids[indexA].separation -= offset / sqrt(sqrDst);
             }
         }
+    }
+    float3 followOffset = followTarget - boidA.position;
+    float targetSqrDst = followOffset.x * followOffset.x + followOffset.y * followOffset.y;
+    if (targetSqrDst < followRadius * followRadius) {
+        boids[indexA].follow = followTarget - boidA.position;
+    }else {
+        boids[indexA].follow = float3(0,0,0);
     }
 }

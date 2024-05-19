@@ -39,6 +39,21 @@ namespace Air {
         }
 
         // CS
+        public static void InitCS(GameBusinessContext ctx, int typeID) {
+            var config = ctx.templateInfraContext.Config_Get();
+            var compute = config.boidCS;
+            var has = ctx.templateInfraContext.Boid_TryGet(typeID, out var boidTM);
+            if (!has) {
+                GLog.LogError("SetCS: boidTM not found: " + typeID);
+                return;
+            }
+
+            compute.SetFloat("alignmentRadius", boidTM.alignmentRadius);
+            compute.SetFloat("separationRadius", boidTM.separationRadius);
+            compute.SetFloat("cohesionRadius", boidTM.cohesionRadius);
+            compute.SetFloat("followRadius", boidTM.followRadius);
+        }
+
         public static void ProcessCS(GameBusinessContext ctx, int typeID, float dt) {
             var boidLen = ctx.boidRepo.TakeAll(out var boids);
             var csModel = ctx.boidCSModelTemp;
@@ -76,11 +91,11 @@ namespace Air {
                 return;
             }
 
+            var owener = ctx.Leader_GetOwner();
+
             compute.SetBuffer(0, "boids", ctx.boidBuffer);
             compute.SetInt("boidsCount", boidLen);
-            compute.SetFloat("alignmentRadius", boidTM.alignmentRadius);
-            compute.SetFloat("separationRadius", boidTM.separationRadius);
-            compute.SetFloat("cohesionRadius", boidTM.cohesionRadius);
+            compute.SetVector("followTarget", owener.Pos);
 
             int threadGroupSize = 256;
             int threadGroups = Mathf.CeilToInt(boidLen / (float)threadGroupSize);
@@ -88,7 +103,7 @@ namespace Air {
 
             ctx.boidBuffer.GetData(csModel, 0, 0, boidLen);
             for (int i = 0; i < boidLen; i++) {
-                boids[i].boidData = csModel[i];
+                boids[i].csModel = csModel[i];
             }
         }
 
@@ -97,12 +112,13 @@ namespace Air {
         }
 
         public static void ApplyMove(GameBusinessContext ctx, BoidEntity boid, float dt) {
-            var boidData = boid.boidData;
+            var boidData = boid.csModel;
             var alignment = boidData.alignment;
             var separation = boidData.separation;
             var otherNum = boidData.cohesionCount;
             var center = boidData.cohesionCenter;
             var cohesion = otherNum > 0 ? center / otherNum - boid.Pos : Vector3.zero;
+            var follow = boidData.follow;
 
             var typeID = boid.typeID;
             var has = ctx.templateInfraContext.Boid_TryGet(typeID, out var boidTM);
@@ -119,6 +135,9 @@ namespace Air {
 
             var cohesionForce = SteerTowards(ctx, cohesion, boid) * boidTM.cohesionWeight;
             acceleration += cohesionForce;
+
+            var followForce = SteerTowards(ctx, follow, boid) * boidTM.followWeight;
+            acceleration += followForce;
 
             Move(ctx, boid, acceleration, boidTM.minSpeed, boidTM.maxSpeed, dt, false);
         }

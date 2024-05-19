@@ -40,6 +40,10 @@ namespace Air {
             var boidAllyStatusArr = mapTM.boidSpawnAllyStatusArr;
             GameBoidDomain.SpawnAll(ctx, boidTMArr, boidPosArr, boidAllyStatusArr);
 
+            //// CS
+            var playerBoidTypeID = 1;
+            GameBoidDomain.InitCS(ctx, playerBoidTypeID);
+
             // Block
             var blockTMArr = mapTM.blockSpawnArr;
             var blockPosArr = mapTM.blockSpawnPosArr;
@@ -114,6 +118,9 @@ namespace Air {
                 var block = blockArr[i];
                 GameBlockDomain.UnSpawn(ctx, block);
             }
+
+            //// CS
+            GameBoidDomain.ReleaseCS(ctx);
 
             // Spike
             int spikeLen = ctx.spikeRepo.TakeAll(out var spikeArr);
