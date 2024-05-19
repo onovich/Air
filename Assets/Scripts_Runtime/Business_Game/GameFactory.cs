@@ -106,6 +106,9 @@ namespace Air {
             var color = randomService.Color();
             boid.Mesh_SetColor(color);
 
+            // Set Trail
+            boid.Trail_SetColor(color);
+
             // Set FSM
             boid.FSM_EnterIdle();
 

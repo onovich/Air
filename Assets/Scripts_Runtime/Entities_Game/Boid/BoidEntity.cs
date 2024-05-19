@@ -29,6 +29,7 @@ namespace Air {
         // Render
         [SerializeField] public Transform body;
         [SerializeField] SpriteRenderer spr;
+        [SerializeField] TrailRenderer trail;
 
         // VFX
         public string deadVFXName;
@@ -99,6 +100,16 @@ namespace Air {
 
         public void Mesh_SetColor(Color color) {
             this.spr.color = color;
+        }
+
+        public void Trail_SetColor(Color color) {
+            this.trail.startColor = color;
+            color.a = 0;
+            this.trail.endColor = color;
+        }
+
+        public void Trail_Clear() {
+            this.trail.Clear();
         }
 
         public void TearDown() {

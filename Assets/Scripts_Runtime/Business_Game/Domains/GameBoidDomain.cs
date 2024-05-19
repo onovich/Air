@@ -184,6 +184,7 @@ namespace Air {
                 pos.x = max.x - offset - epsilon;
             }
             boid.Pos_SetPos(pos);
+            boid.Trail_Clear();
         }
 
     }
