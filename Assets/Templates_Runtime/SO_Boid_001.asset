@@ -14,9 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   typeID: 1
   hpMax: 1
-  maxSteerForce: 2
-  maxSpeed: 16
-  minSpeed: 8
+  maxSteerForce: 2.5
+  maxSpeed: 12
+  minSpeed: 4
   separationWeight: 12
   alignmentWeight: 2
   cohesionWeight: 8
