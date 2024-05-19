@@ -82,7 +82,7 @@ namespace Air {
             compute.SetFloat("separationRadius", boidTM.separationRadius);
             compute.SetFloat("cohesionRadius", boidTM.cohesionRadius);
 
-            int threadGroupSize = 1024;
+            int threadGroupSize = 256;
             int threadGroups = Mathf.CeilToInt(boidLen / (float)threadGroupSize);
             compute.Dispatch(0, threadGroups, 1, 1);
 
