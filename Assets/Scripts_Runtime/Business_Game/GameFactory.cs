@@ -61,6 +61,8 @@ namespace Air {
             map.mapSize = mapTM.mapSize;
             map.mapOffset = mapTM.mapPos;
 
+            map.SetSize(map.mapSize);
+
             return map;
         }
 

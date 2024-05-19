@@ -14,8 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   typeID: 1
   mapSize: {x: 40, y: 24}
-  mapPos: {x: 0, y: -2}
-  SpawnPoint: {x: -3, y: -2}
+  mapPos: {x: 0, y: 0}
+  SpawnPoint: {x: 0, y: 0}
   boidSpawnArr:
   - {fileID: 11400000, guid: b74c6ea0c63d24141bc55dc25267ba3e, type: 2}
   - {fileID: 11400000, guid: b74c6ea0c63d24141bc55dc25267ba3e, type: 2}

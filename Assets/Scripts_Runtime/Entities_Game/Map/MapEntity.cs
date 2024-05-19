@@ -12,12 +12,14 @@ namespace Air {
         public Vector3 mapOffset;
 
         public Dictionary<Vector2, int> terrainTypeIDDict;
-
-        [SerializeField] Tilemap tilemap_terrain;
-        public Tilemap Tilemap_Terrain => tilemap_terrain;
+        [SerializeField] public SpriteRenderer spr;
 
         public void Ctor() {
             terrainTypeIDDict = new Dictionary<Vector2, int>();
+        }
+
+        public void SetSize(Vector3 size) {
+            spr.size = size;
         }
 
         public bool Terrain_GetTypeID(Vector2 pos, out int typeID) {
@@ -30,7 +32,6 @@ namespace Air {
         }
 
         public void Terrain_ClearAll() {
-            tilemap_terrain.ClearAllTiles();
         }
 
         public void TearDown() {

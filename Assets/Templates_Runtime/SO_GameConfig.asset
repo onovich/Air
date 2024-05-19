@@ -15,7 +15,7 @@ MonoBehaviour:
   gameResetEnterTime: 0.5
   playerLeaderTypeID: 1
   originalMapTypeID: 1
-  cameraDeadZoneNormalizedSize: {x: 0.1, y: 0.2}
+  cameraDeadZoneNormalizedSize: {x: 0.8, y: 0.8}
   boidDeadShakeFrequency: 0
   boidDeadShakeAmplitude: 0
   boidDeadShakeDuration: 0
