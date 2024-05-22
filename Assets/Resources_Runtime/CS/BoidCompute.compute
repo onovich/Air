@@ -9,6 +9,7 @@ struct Boid {
     float3 cohesionCenter;
     float3 separation;
     float3 follow;
+    float3 avoid;
 
     int cohesionCount;
 };
@@ -19,6 +20,7 @@ float alignmentRadius;
 float separationRadius;
 float cohesionRadius;
 float followRadius;
+float avoidRadius;
 float3 followTargetPos;
 float3 followTargetDir;
 
@@ -26,6 +28,12 @@ float3 followTargetDir;
 void CSMain (uint3 id : SV_DispatchThreadID) {
     uint indexA = id.x;
     Boid boidA = boids[indexA];
+    boids[indexA].alignment = float3(0, 0, 0);
+    boids[indexA].cohesionCenter = float3(0, 0, 0);
+    boids[indexA].separation = float3(0, 0, 0);
+    boids[indexA].follow = float3(0, 0, 0);
+    boids[indexA].avoid = float3(0, 0, 0);
+    boids[indexA].cohesionCount = 0;
 
     for (uint indexB = 0; indexB < boidsCount; indexB++) {
         if (indexA != indexB) {
@@ -55,10 +63,8 @@ void CSMain (uint3 id : SV_DispatchThreadID) {
         boids[indexA].follow = followTargetPos - boidA.position;
         // 对齐目标
         boids[indexA].alignment += followTargetDir;
-    }else {
-        boids[indexA].follow = float3(0,0,0);
     }
-    if(targetSqrDst < separationRadius * separationRadius){
-        boids[indexA].separation -= followOffset / sqrt(targetSqrDst);
+    if(targetSqrDst < avoidRadius * avoidRadius){
+        boids[indexA].avoid -= followOffset / sqrt(targetSqrDst);
     }
 }

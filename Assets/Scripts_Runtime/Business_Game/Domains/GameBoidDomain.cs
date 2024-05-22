@@ -52,6 +52,7 @@ namespace Air {
             compute.SetFloat("separationRadius", boidTM.separationRadius);
             compute.SetFloat("cohesionRadius", boidTM.cohesionRadius);
             compute.SetFloat("followRadius", boidTM.followRadius);
+            compute.SetFloat("avoidRadius", boidTM.avoidRadius);
         }
 
         public static void ProcessCS(GameBusinessContext ctx, int typeID, float dt) {
@@ -120,6 +121,7 @@ namespace Air {
             var center = boidData.cohesionCenter;
             var cohesion = otherNum > 0 ? center / otherNum - boid.Pos : Vector3.zero;
             var follow = boidData.follow;
+            var avoid = boidData.avoid;
 
             var typeID = boid.typeID;
             var has = ctx.templateInfraContext.Boid_TryGet(typeID, out var boidTM);
@@ -139,6 +141,9 @@ namespace Air {
 
             var followForce = SteerTowards(ctx, follow, boid) * boidTM.followWeight;
             acceleration += followForce;
+
+            var avoidForce = SteerTowards(ctx, avoid, boid) * boidTM.avoidWeight;
+            acceleration += avoidForce;
 
             Move(ctx, boid, acceleration, boidTM.minSpeed, boidTM.maxSpeed, dt, false);
         }
