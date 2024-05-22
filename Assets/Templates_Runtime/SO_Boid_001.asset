@@ -14,19 +14,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   typeID: 1
   hpMax: 1
-  maxSteerForce: 10
-  maxSpeed: 10
-  minSpeed: 4
-  separationWeight: 4
+  maxSteerForce: 8
+  maxSpeed: 8
+  minSpeed: 5
+  separationWeight: 2.5
   alignmentWeight: 2
-  cohesionWeight: 2
-  followWeight: 3
-  avoidWeight: 3
-  separationRadius: 2
-  alignmentRadius: 4
-  cohesionRadius: 4
-  followRadius: 20
-  avoidRadius: 2
+  cohesionWeight: 1
+  followWeight: 2
+  avoidWeight: 2.5
+  avoidRadius: 1
+  viewRadius: 2.5
   mesh: {fileID: 21300000, guid: 880701d384a32445393977a7c732d3ce, type: 3}
   color: {r: 1, g: 1, b: 1, a: 1}
   deadVFX: {fileID: 1046417506903995189, guid: 4cc547ee9ad754a728a343efb6c300c0, type: 3}

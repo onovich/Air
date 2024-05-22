@@ -27,7 +27,7 @@ namespace Air {
         [SerializeField] SpriteRenderer spr;
 
         // Pos
-        public Vector2 Pos => Pos_GetPos();
+        public Vector3 Pos => Pos_GetPos();
         public Vector2 Dir => transform.up;
 
         // VFX

@@ -48,10 +48,7 @@ namespace Air {
                 return;
             }
 
-            compute.SetFloat("alignmentRadius", boidTM.alignmentRadius);
-            compute.SetFloat("separationRadius", boidTM.separationRadius);
-            compute.SetFloat("cohesionRadius", boidTM.cohesionRadius);
-            compute.SetFloat("followRadius", boidTM.followRadius);
+            compute.SetFloat("viewRadius", boidTM.viewRadius);
             compute.SetFloat("avoidRadius", boidTM.avoidRadius);
         }
 
@@ -96,8 +93,6 @@ namespace Air {
 
             compute.SetBuffer(0, "boids", ctx.boidBuffer);
             compute.SetInt("boidsCount", boidLen);
-            compute.SetVector("followTargetPos", owener.Pos);
-            compute.SetVector("followTargetDir", owener.Dir);
 
             int threadGroupSize = 256;
             int threadGroups = Mathf.CeilToInt(boidLen / (float)threadGroupSize);
@@ -120,8 +115,6 @@ namespace Air {
             var otherNum = boidData.cohesionCount;
             var center = boidData.cohesionCenter;
             var cohesion = otherNum > 0 ? center / otherNum - boid.pos : Vector3.zero;
-            var follow = boidData.follow;
-            var avoid = boidData.avoid;
 
             var typeID = boid.typeID;
             var has = ctx.templateInfraContext.Boid_TryGet(typeID, out var boidTM);
@@ -130,6 +123,15 @@ namespace Air {
             }
 
             var acceleration = Vector3.zero;
+
+            var follow = ctx.Leader_GetOwner().Pos - boid.pos;
+            var sqrDst = follow.x * follow.x + follow.y * follow.y;
+            var followForce = Vector3.zero;
+            if (sqrDst < boidTM.followRadius * boidTM.followRadius) {
+                followForce = SteerTowards(ctx, follow, boid) * boidTM.followWeight;
+            }
+            acceleration += followForce;
+
             var separationForce = SteerTowards(ctx, separation, boid) * boidTM.separationWeight;
             acceleration += separationForce;
 
@@ -138,12 +140,6 @@ namespace Air {
 
             var cohesionForce = SteerTowards(ctx, cohesion, boid) * boidTM.cohesionWeight;
             acceleration += cohesionForce;
-
-            var followForce = SteerTowards(ctx, follow, boid) * boidTM.followWeight;
-            acceleration += followForce;
-
-            var avoidForce = SteerTowards(ctx, avoid, boid) * boidTM.avoidWeight;
-            acceleration += avoidForce;
 
             Move(ctx, boid, acceleration, boidTM.minSpeed, boidTM.maxSpeed, dt, false);
         }

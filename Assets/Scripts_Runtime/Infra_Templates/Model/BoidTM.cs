@@ -24,20 +24,14 @@ namespace Air {
         public float cohesionWeight;
         [Header("跟随Leader")]
         public float followWeight;
-        [Header("躲避Leader")]
-        public float avoidWeight;
 
         [Header("Boids AI Radius")]
-        [Header("分离")]
-        public float separationRadius;
-        [Header("对齐")]
-        public float alignmentRadius;
-        [Header("聚集")]
-        public float cohesionRadius;
-        [Header("跟随Leaer")]
-        public float followRadius;
-        [Header("躲避Leader")]
+        [Header("躲避")]
         public float avoidRadius;
+        [Header("视野")]
+        public float viewRadius;
+        [Header("跟随 Leader")]
+        public float followRadius;
 
         [Header("Render")]
         public Sprite mesh;

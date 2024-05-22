@@ -8,21 +8,14 @@ struct Boid {
     float3 alignment;
     float3 cohesionCenter;
     float3 separation;
-    float3 follow;
-    float3 avoid;
 
     int cohesionCount;
 };
 
 RWStructuredBuffer<Boid> boids;
 uint boidsCount;
-float alignmentRadius;
-float separationRadius;
-float cohesionRadius;
-float followRadius;
+float viewRadius;
 float avoidRadius;
-float3 followTargetPos;
-float3 followTargetDir;
 
 [numthreads(threadGroupSize,1,1)]
 void CSMain (uint3 id : SV_DispatchThreadID) {
@@ -31,8 +24,6 @@ void CSMain (uint3 id : SV_DispatchThreadID) {
     boids[indexA].alignment = float3(0, 0, 0);
     boids[indexA].cohesionCenter = float3(0, 0, 0);
     boids[indexA].separation = float3(0, 0, 0);
-    boids[indexA].follow = float3(0, 0, 0);
-    boids[indexA].avoid = float3(0, 0, 0);
     boids[indexA].cohesionCount = 0;
 
     for (uint indexB = 0; indexB < boidsCount; indexB++) {
@@ -41,30 +32,18 @@ void CSMain (uint3 id : SV_DispatchThreadID) {
             float3 offset = boidB.position - boidA.position;
             float sqrDst = offset.x * offset.x + offset.y * offset.y; 
 
-            // 对齐 Boids
-            if (sqrDst < alignmentRadius * alignmentRadius) {
-                boids[indexA].alignment += boidB.direction;
-            }
-            // 聚集 Boids
-            if(sqrDst < cohesionRadius * cohesionRadius) {
+            if (sqrDst < viewRadius * viewRadius) {
                 boids[indexA].cohesionCount += 1;
+                // 对齐 Boids
+                boids[indexA].alignment += boidB.direction;
+                // 聚集 Boids
                 boids[indexA].cohesionCenter += boidB.position;
-            }
-            // 分离 Boids
-            if (sqrDst < separationRadius * separationRadius) {
-                boids[indexA].separation -= offset / sqrt(sqrDst);
+
+                // 分离 Boids
+                if (sqrDst < avoidRadius * avoidRadius) {
+                    boids[indexA].separation -= offset / sqrt(sqrDst);
+                }
             }
         }
-    }
-    float3 followOffset = followTargetPos - boidA.position;
-    float targetSqrDst = followOffset.x * followOffset.x + followOffset.y * followOffset.y;
-    if (targetSqrDst < followRadius * followRadius) {
-        // 聚集目标
-        boids[indexA].follow = followTargetPos - boidA.position;
-        // 对齐目标
-        boids[indexA].alignment += followTargetDir;
-    }
-    if(targetSqrDst < avoidRadius * avoidRadius){
-        boids[indexA].avoid -= followOffset / sqrt(targetSqrDst);
     }
 }

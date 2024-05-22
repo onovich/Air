@@ -37,35 +37,10 @@ namespace Air {
             return all.TryGetValue(entityID, out leader);
         }
 
-        public bool IsInRange(int entityID, in Vector2 pos, float range) {
-            bool has = TryGetLeader(entityID, out var leader);
-            if (!has) {
-                return false;
-            }
-            return Vector2.SqrMagnitude(leader.Pos - pos) <= range * range;
-        }
-
         public void ForEach(Action<LeaderEntity> action) {
             foreach (var leader in all.Values) {
                 action(leader);
             }
-        }
-
-        public LeaderEntity GetNeareast(AllyStatus allyStatus, Vector2 pos, float radius) {
-            LeaderEntity nearestLeader = null;
-            float nearestDist = float.MaxValue;
-            float radiusSqr = radius * radius;
-            foreach (var leader in all.Values) {
-                if (leader.allyStatus != allyStatus) {
-                    continue;
-                }
-                float dist = Vector2.SqrMagnitude(leader.Pos - pos);
-                if (dist <= radiusSqr && dist < nearestDist) {
-                    nearestDist = dist;
-                    nearestLeader = leader;
-                }
-            }
-            return nearestLeader;
         }
 
         public void Clear() {
