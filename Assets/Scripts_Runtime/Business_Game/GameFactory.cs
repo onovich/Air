@@ -94,10 +94,12 @@ namespace Air {
 
             // Set Pos
             boid.Pos_SetPos(pos);
+            boid.transform.position = pos;
 
             // Set Rotation
             var rot = randomService.Rotation();
             boid.transform.rotation = rot;
+            boid.Dir_Set(boid.transform.up);
 
             // Set Velocity
             float speed = (boidTM.minSpeed + boidTM.maxSpeed) / 2;

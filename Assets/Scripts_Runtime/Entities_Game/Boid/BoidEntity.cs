@@ -36,9 +36,8 @@ namespace Air {
         public float deadVFXDuration;
 
         // Pos
-        public Vector3 Pos => transform.position;
-        public Vector2Int GridPos => new Vector2Int((int)Pos.x, (int)Pos.y);
-        public Vector3 Up => transform.up;
+        public Vector3 pos;
+        public Vector3 up;
 
         // TearDown
         public bool needTearDown;
@@ -50,7 +49,11 @@ namespace Air {
 
         // Pos
         public void Pos_SetPos(Vector2 pos) {
-            transform.position = pos;
+            this.pos = pos;
+        }
+
+        public void Dir_Set(Vector2 dir) {
+            this.up = dir;
         }
 
         // Velocity

@@ -65,8 +65,8 @@ namespace Air {
             }
 
             for (int i = 0; i < boidLen; i++) {
-                csModel[i].position = boids[i].Pos;
-                csModel[i].direction = boids[i].Up;
+                csModel[i].position = boids[i].pos;
+                csModel[i].direction = boids[i].up;
             }
 
             if (ctx.boidBuffer == null || ctx.boidBuffer.count != boidLen) {
@@ -119,7 +119,7 @@ namespace Air {
             var separation = boidData.separation;
             var otherNum = boidData.cohesionCount;
             var center = boidData.cohesionCenter;
-            var cohesion = otherNum > 0 ? center / otherNum - boid.Pos : Vector3.zero;
+            var cohesion = otherNum > 0 ? center / otherNum - boid.pos : Vector3.zero;
             var follow = boidData.follow;
             var avoid = boidData.avoid;
 
@@ -158,18 +158,18 @@ namespace Air {
             velocity = dir * speed;
             boid.Velocity_Set(velocity);
 
-            var pos = boid.Pos;
+            var pos = boid.transform.position;
             pos += velocity * fixdt;
             boid.Move_SetUp(dir);
+            boid.transform.up = dir;
 
             if (hasNoBoids && speed < minSpeed) {
                 Debug.Log("No Boids: Speed =" + speed);
                 return;
             }
 
-            var oldPos = boid.Pos;
             boid.Pos_SetPos(pos);
-            ctx.boidRepo.UpdatePos(boid, oldPos);
+            boid.transform.position = pos;
         }
 
         static Vector3 SteerTowards(GameBusinessContext ctx, Vector3 vector, BoidEntity boid) {
@@ -188,14 +188,14 @@ namespace Air {
             var center = map.transform.position;
             var min = center - size / 2;
             var max = center + size / 2;
-            var pos = boid.Pos;
+            var pos = boid.pos;
             if (pos.x < min.x || pos.x > max.x || pos.y < min.y || pos.y > max.y) {
                 MoveToOppoSide(ctx, boid, max, min);
             }
         }
 
         static void MoveToOppoSide(GameBusinessContext ctx, BoidEntity boid, Vector2 max, Vector2 min) {
-            Vector3 pos = boid.Pos;
+            Vector3 pos = boid.pos;
             var epsilon = 0.4f;
             if (pos.y >= max.y) {
                 var offset = pos.y - max.y;
@@ -214,6 +214,7 @@ namespace Air {
                 pos.x = max.x - offset - epsilon;
             }
             boid.Pos_SetPos(pos);
+            boid.transform.position = pos;
             boid.Trail_Clear();
         }
 

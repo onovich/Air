@@ -48,7 +48,7 @@ namespace Air {
             }
 
             // VFX
-            VFXApp.AddVFXToWorld(ctx.vfxContext, boid.deadVFXName, boid.deadVFXDuration, boid.Pos);
+            VFXApp.AddVFXToWorld(ctx.vfxContext, boid.deadVFXName, boid.deadVFXDuration, boid.pos);
 
             // Camera
             CameraApp.ShakeOnce(ctx.cameraContext, ctx.cameraContext.mainCameraID);
