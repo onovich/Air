@@ -95,7 +95,8 @@ namespace Air {
 
             compute.SetBuffer(0, "boids", ctx.boidBuffer);
             compute.SetInt("boidsCount", boidLen);
-            compute.SetVector("followTarget", owener.Pos);
+            compute.SetVector("followTargetPos", owener.Pos);
+            compute.SetVector("followTargetDir", owener.Dir);
 
             int threadGroupSize = 256;
             int threadGroups = Mathf.CeilToInt(boidLen / (float)threadGroupSize);

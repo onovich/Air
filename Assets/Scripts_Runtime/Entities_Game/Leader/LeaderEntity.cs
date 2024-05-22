@@ -24,11 +24,11 @@ namespace Air {
         public LeaderInputComponent inputCom;
 
         // Render
-        [SerializeField] public Transform body;
         [SerializeField] SpriteRenderer spr;
 
         // Pos
         public Vector2 Pos => Pos_GetPos();
+        public Vector2 Dir => transform.up;
 
         // VFX
         public string deadVFXName;
@@ -57,17 +57,6 @@ namespace Air {
         }
 
         // Move
-        public void Move_ApplyMove(float dt) {
-            Move_Apply(inputCom.moveAxis.x, Attr_GetMoveSpeed(), dt);
-        }
-
-        public void Move_Stop() {
-            Move_Apply(0, 0, 0);
-        }
-
-        void Move_Apply(float xAxis, float moveSpeed, float fixdt) {
-            velocity.x = xAxis * moveSpeed;
-        }
 
         // FSM
         public LeaderFSMStatus FSM_GetStatus() {

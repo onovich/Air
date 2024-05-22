@@ -19,7 +19,8 @@ float alignmentRadius;
 float separationRadius;
 float cohesionRadius;
 float followRadius;
-float3 followTarget;
+float3 followTargetPos;
+float3 followTargetDir;
 
 [numthreads(threadGroupSize,1,1)]
 void CSMain (uint3 id : SV_DispatchThreadID) {
@@ -32,23 +33,32 @@ void CSMain (uint3 id : SV_DispatchThreadID) {
             float3 offset = boidB.position - boidA.position;
             float sqrDst = offset.x * offset.x + offset.y * offset.y; 
 
+            // 对齐 Boids
             if (sqrDst < alignmentRadius * alignmentRadius) {
                 boids[indexA].alignment += boidB.direction;
             }
+            // 聚集 Boids
             if(sqrDst < cohesionRadius * cohesionRadius) {
                 boids[indexA].cohesionCount += 1;
                 boids[indexA].cohesionCenter += boidB.position;
             }
+            // 分离 Boids
             if (sqrDst < separationRadius * separationRadius) {
                 boids[indexA].separation -= offset / sqrt(sqrDst);
             }
         }
     }
-    float3 followOffset = followTarget - boidA.position;
+    float3 followOffset = followTargetPos - boidA.position;
     float targetSqrDst = followOffset.x * followOffset.x + followOffset.y * followOffset.y;
     if (targetSqrDst < followRadius * followRadius) {
-        boids[indexA].follow = followTarget - boidA.position;
+        // 聚集目标
+        boids[indexA].follow = followTargetPos - boidA.position;
+        // 对齐目标
+        boids[indexA].alignment += followTargetDir;
     }else {
         boids[indexA].follow = float3(0,0,0);
+    }
+    if(targetSqrDst < separationRadius * separationRadius){
+        boids[indexA].separation -= followOffset / sqrt(targetSqrDst);
     }
 }
